@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>National Bridge Condition Repository | TX · CA · PA · FL · NY</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* ─── DESIGN TOKENS ─────────────────────────────────────────── */
+:root{
+  --bg:#05090f;
+  --surface:#0c1420;
+  --surface2:#111d2e;
+  --border:#1e3050;
+  --border2:#2a4060;
+  --text:#d8e8f8;
+  --text-dim:#7a9bbf;
+  --text-faint:#3a5878;
+  --accent:#e8b84b;
+  --accent2:#4fc3f7;
+  --accent3:#66ffc2;
+  --red:#ff5f6d;
+  --orange:#ff9a3c;
+  --yellow:#ffd166;
+  --green:#06d6a0;
+  --blue:#4fc3f7;
+  --purple:#b48ef8;
+  --font-head:'Syne',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+/* ─── RESET ─────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.65;overflow-x:hidden}
+a{color:var(--accent2);text-decoration:none}
+a:hover{color:var(--accent);text-decoration:underline}
+img{max-width:100%}
+/* ─── SCROLLBAR ──────────────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#060d18}::-webkit-scrollbar-thumb{background:#2a4060;border-radius:3px}
+/* ─── NAV ────────────────────────────────────────────────────── */
+#topnav{position:fixed;top:0;left:0;width:100%;z-index:999;background:rgba(5,9,15,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0;height:54px}
+.nav-logo{font-family:var(--font-head);font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:0 20px;color:var(--accent);white-space:nowrap;border-right:1px solid var(--border)}
+.nav-links{display:flex;gap:0;overflow-x:auto;flex:1}
+.nav-links a{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);padding:0 16px;height:54px;display:flex;align-items:center;border-right:1px solid var(--border);white-space:nowrap;transition:color .2s,background .2s}
+.nav-links a:hover{color:var(--accent);background:rgba(232,184,75,.05);text-decoration:none}
+.nav-badge{margin-left:auto;padding:0 20px;font-family:var(--font-mono);font-size:10px;color:var(--text-faint);white-space:nowrap}
+/* ─── HERO ───────────────────────────────────────────────────── */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:90px 60px 60px;position:relative;overflow:hidden}
+.hero-grid-bg{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.18;pointer-events:none}
+.hero-glow{position:absolute;top:-200px;right:-200px;width:700px;height:700px;background:radial-gradient(circle,rgba(79,195,247,.07) 0%,transparent 70%);pointer-events:none}
+.hero-glow2{position:absolute;bottom:-100px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(232,184,75,.06) 0%,transparent 70%);pointer-events:none}
+.hero-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--accent)}
+h1.hero-title{font-family:var(--font-head);font-size:clamp(36px,6vw,78px);font-weight:800;line-height:1.05;letter-spacing:-.02em;color:#fff;margin-bottom:24px}
+h1.hero-title span{color:var(--accent)}
+.hero-sub{font-family:var(--font-body);font-size:16px;color:var(--text-dim);max-width:620px;margin-bottom:48px;line-height:1.7}
+.state-pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:56px}
+.pill{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;padding:6px 16px;border:1px solid var(--border2);border-radius:2px;color:var(--text-dim);background:var(--surface);transition:all .25s;cursor:default}
+.pill:hover{border-color:var(--accent);color:var(--accent);background:rgba(232,184,75,.08)}
+.hero-stats{display:grid;grid-template-columns:repeat(4,auto);gap:0;border:1px solid var(--border);width:fit-content}
+.hstat{padding:20px 32px;border-right:1px solid var(--border)}
+.hstat:last-child{border-right:none}
+.hstat-num{font-family:var(--font-head);font-size:28px;font-weight:700;color:#fff}
+.hstat-num span{color:var(--accent);font-size:18px}
+.hstat-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-top:4px}
+/* ─── SECTION LAYOUT ─────────────────────────────────────────── */
+section{padding:80px 60px}
+section:nth-child(even){background:var(--surface)}
+.section-eyebrow{font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.section-eyebrow::before{content:'';display:block;width:22px;height:1px;background:var(--accent)}
+h2.section-title{font-family:var(--font-head);font-size:clamp(24px,3.5vw,42px);font-weight:700;letter-spacing:-.02em;color:#fff;margin-bottom:8px;line-height:1.15}
+.section-desc{color:var(--text-dim);max-width:700px;margin-bottom:48px;font-size:15px;line-height:1.7}
+/* ─── CARDS / GRIDS ──────────────────────────────────────────── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+.card{background:var(--surface2);border:1px solid var(--border);padding:24px;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+.card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.card-accent{position:absolute;top:0;left:0;width:3px;height:100%}
+.card-tag{font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;padding:3px 8px;border-radius:2px;display:inline-block;margin-bottom:12px}
+.tag-good{background:rgba(6,214,160,.15);color:var(--green);border:1px solid rgba(6,214,160,.3)}
+.tag-fair{background:rgba(255,209,102,.15);color:var(--yellow);border:1px solid rgba(255,209,102,.3)}
+.tag-poor{background:rgba(255,95,109,.15);color:var(--red);border:1px solid rgba(255,95,109,.3)}
+.tag-critical{background:rgba(180,142,248,.15);color:var(--purple);border:1px solid rgba(180,142,248,.3)}
+.tag-nbi{background:rgba(79,195,247,.15);color:var(--blue);border:1px solid rgba(79,195,247,.3)}
+.tag-snbi{background:rgba(232,184,75,.15);color:var(--accent);border:1px solid rgba(232,184,75,.3)}
+.card h3{font-family:var(--font-head);font-size:17px;font-weight:700;color:#fff;margin-bottom:8px}
+.card h4{font-family:var(--font-head);font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
+.card p{font-size:13.5px;color:var(--text-dim);line-height:1.6}
+/* ─── STATE CARDS ────────────────────────────────────────────── */
+.state-card{background:var(--surface2);border:1px solid var(--border);overflow:hidden;position:relative;transition:all .3s}
+.state-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.sc-header{padding:20px 22px 14px;border-bottom:1px solid var(--border)}
+.sc-abbr{font-family:var(--font-head);font-size:36px;font-weight:800;color:var(--accent);line-height:1}
+.sc-name{font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-top:3px}
+.sc-body{padding:18px 22px}
+.sc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sc-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint)}
+.sc-val{font-family:var(--font-mono);font-size:12px;color:var(--text)}
+.progress-bar{height:5px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:3px}
+.pb-fill{height:100%;border-radius:2px;transition:width 1.2s ease}
+.pb-good{background:var(--green)}
+.pb-fair{background:var(--yellow)}
+.pb-poor{background:var(--red)}
+.sc-cond{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.cond-label{font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px}
+/* ─── CONDITION BARS ─────────────────────────────────────────── */
+.cond-stack{display:flex;height:10px;border-radius:2px;overflow:hidden;gap:2px;margin-bottom:6px}
+.cs-good{background:var(--green)}
+.cs-fair{background:var(--yellow)}
+.cs-poor{background:var(--red)}
+.cond-legend{display:flex;gap:12px;font-family:var(--font-mono);font-size:9px;color:var(--text-dim)}
+.cl-dot{display:inline-block;width:7px;height:7px;border-radius:1px;margin-right:3px;vertical-align:middle}
+/* ─── INDEX COMPARISON ───────────────────────────────────────── */
+.index-table{width:100%;border-collapse:collapse;font-size:13px}
+.index-table th{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding:10px 14px;border-bottom:1px solid var(--border);text-align:left;background:var(--surface)}
+.index-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-dim);vertical-align:top}
+.index-table tr:hover td{background:rgba(79,195,247,.04);color:var(--text)}
+.index-table td:first-child{font-family:var(--font-mono);font-size:11px;color:var(--text);white-space:nowrap}
+.rating-scale{display:flex;gap:3px;margin:6px 0}
+.rs-cell{flex:1;height:18px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:8px;font-weight:500}
+/* ─── FAILURE CASES ──────────────────────────────────────────── */
+.failure-card{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--red);padding:22px 24px;margin-bottom:18px;position:relative}
+.failure-card:hover{border-color:var(--red);border-left-color:var(--red)}
+.fc-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
+.fc-title{font-family:var(--font-head);font-size:16px;font-weight:700;color:#fff}
+.fc-meta{font-family:var(--font-mono);font-size:10px;color:var(--text-faint);margin-top:3px}
+.fc-badge{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;padding:3px 8px;white-space:nowrap;flex-shrink:0}
+.fc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0;border:1px solid var(--border);padding:14px}
+.fc-stat{text-align:center}
+.fc-stat-num{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--red)}
+.fc-stat-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);margin-top:2px}
+.fc-rehab{background:rgba(6,214,160,.06);border:1px solid rgba(6,214,160,.2);padding:12px 14px;margin-top:12px}
+.fc-rehab-label{font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:6px}
+/* ─── REHAB METHODS ──────────────────────────────────────────── */
+.method-card{background:var(--surface2);border:1px solid var(--border);padding:22px;transition:all .3s;cursor:default}
+.method-card:hover{border-color:var(--accent2);background:rgba(79,195,247,.04)}
+.method-icon{font-size:24px;margin-bottom:12px}
+.method-title{font-family:var(--font-head);font-size:15px;font-weight:700;color:#fff;margin-bottom:6px}
+.method-body{font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:14px}
+.method-specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;border-top:1px solid var(--border);padding-top:12px;margin-top:4px}
+.ms-item{font-family:var(--font-mono);font-size:10px}
+.ms-key{color:var(--text-faint);display:block;margin-bottom:2px}
+.ms-val{color:var(--text)}
+/* ─── COST TABLE ─────────────────────────────────────────────── */
+.cost-table{width:100%;border-collapse:collapse}
+.cost-table th{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:10px 14px;border-bottom:2px solid var(--accent);color:var(--accent);text-align:left}
+.cost-table td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-dim)}
+.cost-table tr:hover td{background:rgba(232,184,75,.04);color:var(--text)}
+.cost-table td:nth-child(3){font-family:var(--font-mono);font-size:12px;color:var(--accent)}
+.cost-table td:nth-child(4){font-family:var(--font-mono);font-size:12px;color:var(--accent2)}
+/* ─── ALT ROUTE ──────────────────────────────────────────────── */
+.route-card{background:var(--surface2);border:1px solid var(--border);padding:22px;position:relative;overflow:hidden}
+.route-card::before{content:'';position:absolute;top:0;right:0;width:100px;height:100px;background:radial-gradient(circle,rgba(79,195,247,.06) 0%,transparent 70%)}
+.route-title{font-family:var(--font-head);font-size:15px;font-weight:700;color:#fff;margin-bottom:6px}
+.route-sub{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;color:var(--accent2);margin-bottom:10px}
+.route-steps{list-style:none;counter-reset:step}
+.route-steps li{counter-increment:step;display:flex;gap:12px;align-items:flex-start;margin-bottom:8px;font-size:13px;color:var(--text-dim)}
+.route-steps li::before{content:counter(step);font-family:var(--font-mono);font-size:10px;color:var(--accent2);border:1px solid var(--accent2);width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;border-radius:2px}
+/* ─── RANKING ────────────────────────────────────────────────── */
+.rank-bar-wrap{margin-bottom:20px}
+.rb-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.rb-name{font-family:var(--font-head);font-size:14px;font-weight:600;color:#fff}
+.rb-score{font-family:var(--font-mono);font-size:13px}
+.rb-bar{height:8px;background:var(--border);border-radius:2px;overflow:hidden}
+.rb-fill{height:100%;border-radius:2px;transition:width 1.5s ease}
+.rb-meta{display:flex;gap:16px;margin-top:5px;font-family:var(--font-mono);font-size:10px;color:var(--text-faint)}
+/* ─── NODE CONNECTOR ─────────────────────────────────────────── */
+.node-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.node-card{background:var(--surface2);border:1px solid var(--border);padding:18px;position:relative;transition:all .3s;cursor:pointer}
+.node-card:hover{border-color:var(--accent3);box-shadow:0 0 20px rgba(102,255,194,.08)}
+.node-card.connected{border-color:rgba(102,255,194,.4);background:rgba(102,255,194,.04)}
+.node-card.connected::after{content:'CONNECTED';position:absolute;top:10px;right:10px;font-family:var(--font-mono);font-size:8px;letter-spacing:.1em;color:var(--accent3);background:rgba(102,255,194,.1);padding:2px 6px;border-radius:2px}
+.node-dot{width:10px;height:10px;border-radius:50%;margin-bottom:10px;position:relative}
+.node-dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid currentColor;opacity:.4;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:.8;transform:scale(1.3)}}
+.nd-green{background:var(--accent3);color:var(--accent3)}
+.nd-yellow{background:var(--yellow);color:var(--yellow)}
+.nd-blue{background:var(--blue);color:var(--blue)}
+.node-name{font-family:var(--font-head);font-size:13px;font-weight:600;color:#fff;margin-bottom:3px}
+.node-url{font-family:var(--font-mono);font-size:10px;color:var(--text-faint);word-break:break-all;margin-bottom:8px}
+.node-desc{font-size:12px;color:var(--text-dim);line-height:1.5}
+.node-btn{display:inline-block;margin-top:10px;font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border:1px solid var(--border2);color:var(--text-dim);background:transparent;cursor:pointer;transition:all .2s;text-decoration:none}
+.node-btn:hover{border-color:var(--accent3);color:var(--accent3);text-decoration:none}
+/* ─── SOURCES ────────────────────────────────────────────────── */
+.source-item{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
+.source-num{font-family:var(--font-mono);font-size:11px;color:var(--accent);width:28px;flex-shrink:0;margin-top:2px}
+.source-content{}
+.source-title{font-size:14px;color:var(--text);margin-bottom:3px;line-height:1.4}
+.source-title a{color:var(--accent2)}
+.source-title a:hover{color:var(--accent)}
+.source-meta{font-family:var(--font-mono);font-size:10px;color:var(--text-faint)}
+/* ─── HI SCALE ───────────────────────────────────────────────── */
+.hi-scale{display:flex;border:1px solid var(--border);overflow:hidden;margin-bottom:10px}
+.hi-cell{flex:1;padding:8px 6px;text-align:center;font-family:var(--font-mono);font-size:9px;border-right:1px solid var(--border)}
+.hi-cell:last-child{border-right:none}
+.hi-num{font-size:14px;font-weight:700;display:block;margin-bottom:3px}
+/* ─── TABS ───────────────────────────────────────────────────── */
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:28px;gap:0}
+.tab-btn{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:10px 20px;cursor:pointer;border:none;background:none;color:var(--text-dim);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-btn:hover{color:var(--text)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+/* ─── TOOLTIP ────────────────────────────────────────────────── */
+[data-tip]{position:relative;cursor:help}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0c1420;border:1px solid var(--border2);color:var(--text);font-family:var(--font-mono);font-size:10px;padding:6px 10px;border-radius:2px;white-space:nowrap;z-index:100;pointer-events:none}
+/* ─── CALLOUT ────────────────────────────────────────────────── */
+.callout{border-left:3px solid var(--accent);background:rgba(232,184,75,.06);padding:14px 18px;margin:18px 0;font-size:13.5px;color:var(--text-dim);line-height:1.65}
+.callout strong{color:var(--accent);font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:4px}
+.callout-blue{border-left-color:var(--accent2);background:rgba(79,195,247,.06)}
+.callout-blue strong{color:var(--accent2)}
+.callout-green{border-left-color:var(--green);background:rgba(6,214,160,.06)}
+.callout-green strong{color:var(--green)}
+.callout-red{border-left-color:var(--red);background:rgba(255,95,109,.06)}
+.callout-red strong{color:var(--red)}
+/* ─── DIVIDER ────────────────────────────────────────────────── */
+.divider{border:none;border-top:1px solid var(--border);margin:28px 0}
+/* ─── BADGE ──────────────────────────────────────────────────── */
+.badge{display:inline-block;font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-right:5px;margin-bottom:4px}
+.badge-blue{background:rgba(79,195,247,.15);color:var(--blue);border:1px solid rgba(79,195,247,.3)}
+.badge-green{background:rgba(6,214,160,.15);color:var(--green);border:1px solid rgba(6,214,160,.3)}
+.badge-red{background:rgba(255,95,109,.15);color:var(--red);border:1px solid rgba(255,95,109,.3)}
+.badge-yellow{background:rgba(255,209,102,.15);color:var(--yellow);border:1px solid rgba(255,209,102,.3)}
+.badge-orange{background:rgba(255,154,60,.15);color:var(--orange);border:1px solid rgba(255,154,60,.3)}
+.badge-purple{background:rgba(180,142,248,.15);color:var(--purple);border:1px solid rgba(180,142,248,.3)}
+/* ─── FOOTER ─────────────────────────────────────────────────── */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:36px 60px;font-family:var(--font-mono);font-size:11px;color:var(--text-faint);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+/* ─── RESPONSIVE ─────────────────────────────────────────────── */
+@media(max-width:900px){
+  #hero,section,footer{padding-left:24px;padding-right:24px}
+  .grid-5{grid-template-columns:1fr 1fr}
+  .grid-4,.grid-3{grid-template-columns:1fr 1fr}
+  .grid-2{grid-template-columns:1fr}
+  .fc-grid{grid-template-columns:1fr 1fr}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .node-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .grid-5,.grid-4,.grid-3,.grid-2{grid-template-columns:1fr}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .node-grid{grid-template-columns:1fr}
+}
+/* ─── ANIMATION ──────────────────────────────────────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .6s ease both}
+.delay-1{animation-delay:.1s}.delay-2{animation-delay:.2s}.delay-3{animation-delay:.3s}.delay-4{animation-delay:.4s}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════════════════════════════ -->
+<nav id="topnav">
+  <div class="nav-logo">Bridge Repository</div>
+  <div class="nav-links">
+    <a href="#overview">Overview</a>
+    <a href="#indices">NBI / SNBI</a>
+    <a href="#states">State Data</a>
+    <a href="#failures">Failures</a>
+    <a href="#rehab">Rehabilitation</a>
+    <a href="#costs">Cost & Time</a>
+    <a href="#altroutes">Alt Routes</a>
+    <a href="#ranking">Rankings</a>
+    <a href="#nodes">Data Nodes</a>
+    <a href="#sources">Sources</a>
+  </div>
+  <div class="nav-badge">v1.0 · 2024 Data</div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════════════════════ -->
+<section id="hero" style="padding-top:90px">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-eyebrow fade-up">National Bridge Condition Repository</div>
+  <h1 class="hero-title fade-up delay-1">Bridge Index &amp;<br><span>Condition Intelligence</span></h1>
+  <p class="hero-sub fade-up delay-2">A comprehensive technical reference for bridge health indices, failure case studies, rehabilitation methodologies, cost-duration analysis, and alternative route planning across five major U.S. states.</p>
+  <div class="state-pills fade-up delay-3">
+    <div class="pill">🌟 Texas</div>
+    <div class="pill">🌉 California</div>
+    <div class="pill">🏛 Pennsylvania</div>
+    <div class="pill">🌴 Florida</div>
+    <div class="pill">🗽 New York</div>
+  </div>
+  <div class="hero-stats fade-up delay-4">
+    <div class="hstat"><div class="hstat-num">131<span>K+</span></div><div class="hstat-label">Total Bridges</div></div>
+    <div class="hstat"><div class="hstat-num">~12<span>%</span></div><div class="hstat-label">Poor Condition</div></div>
+    <div class="hstat"><div class="hstat-num">$125<span>B</span></div><div class="hstat-label">Backlog Need</div></div>
+    <div class="hstat"><div class="hstat-num">5</div><div class="hstat-label">States Analyzed</div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 1 — OVERVIEW
+══════════════════════════════════════════════════════════════ -->
+<section id="overview">
+  <div class="section-eyebrow">Section 01</div>
+  <h2 class="section-title">Program Overview</h2>
+  <p class="section-desc">Bridge condition assessment in the United States operates under two concurrent frameworks — the legacy National Bridge Inspection Standards (NBIS / NBI) and the modernized Streamlined National Bridge Inventory (SNBI) adopted in 2022. Understanding both is critical for interpreting historical data and transitioning to new element-level condition states.</p>
+
+  <div class="callout">
+    <strong>Key Note</strong>
+    As of 2022, FHWA officially transitioned to SNBI, replacing the component-level 0–9 ratings with element-level condition states (CS1–CS4). States are at various phases of this transition. All five states analyzed here report under both frameworks for continuity.
+  </div>
+
+  <div class="grid-3" style="margin-top:28px">
+    <div class="card">
+      <div class="card-accent" style="background:var(--blue)"></div>
+      <span class="card-tag tag-nbi">NBI Framework</span>
+      <h3>National Bridge Inventory</h3>
+      <p>Established under NBIS (1971), the NBI uses a 0–9 numeric rating system for Deck, Superstructure, Substructure, and Culvert components. A bridge is classified "structurally deficient" if any key element rates ≤4, or "functionally obsolete" if it no longer meets current design standards.</p>
+    </div>
+    <div class="card">
+      <div class="card-accent" style="background:var(--accent)"></div>
+      <span class="card-tag tag-snbi">SNBI Framework</span>
+      <h3>Streamlined NBI (2022)</h3>
+      <p>SNBI replaced the "structurally deficient" label with element-level Condition States (CS1 Good → CS4 Severe/Critical). It uses AASHTO CoRe element quantities and calculates a Health Index (HI) per element, enabling more granular asset management and lifecycle cost planning.</p>
+    </div>
+    <div class="card">
+      <div class="card-accent" style="background:var(--accent3)"></div>
+      <span class="card-tag tag-good">Health Index (HI)</span>
+      <h3>Bridge Health Index</h3>
+      <p>HI is a weighted percentage (0–100%) expressing the ratio of current element value to total potential value, summed across all CoRe elements. HI ≥ 80 = Good; 60–79 = Fair; 40–59 = Poor; &lt; 40 = Critical. It directly drives maintenance priority and funding allocation under the Bridge Formula Program.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 2 — NBI vs SNBI INDEX COMPARISON
+══════════════════════════════════════════════════════════════ -->
+<section id="indices">
+  <div class="section-eyebrow">Section 02</div>
+  <h2 class="section-title">NBI vs. SNBI — Index Comparison</h2>
+  <p class="section-desc">The two frameworks differ fundamentally in rating philosophy, data granularity, and how they classify deficiency. The table below maps rating equivalencies and highlights the major structural differences.</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(event,'tab-compare')">Rating Comparison</button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-nbi-scale')">NBI Scale Detail</button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-snbi-scale')">SNBI / HI Scale</button>
+    <button class="tab-btn" onclick="switchTab(event,'tab-transition')">State Transition Status</button>
+  </div>
+
+  <div id="tab-compare" class="tab-pane active">
+    <table class="index-table">
+      <thead>
+        <tr><th>Attribute</th><th>NBI (Legacy)</th><th>SNBI (2022+)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Scale</td><td>0 – 9 numeric per component</td><td>Condition States CS1–CS4 per element</td></tr>
+        <tr><td>Components Rated</td><td>Deck, Superstructure, Substructure, Culvert</td><td>180+ AASHTO CoRe elements (beams, joints, bearings, etc.)</td></tr>
+        <tr><td>Deficiency Trigger</td><td>Any key element ≤ 4 → Structurally Deficient</td><td>Any element in CS4 (Severe) → Condition Critical</td></tr>
+        <tr><td>Summary Metric</td><td>Sufficiency Rating (0–100)</td><td>Health Index / HI (0–100%)</td></tr>
+        <tr><td>Overall Condition</td><td>Overall Condition Rating (Good / Fair / Poor based on lowest of Deck / Super / Sub)</td><td>Bridge Condition (Good / Fair / Poor / Severe) per element CS distribution</td></tr>
+        <tr><td>Data Granularity</td><td>Component-level (low)</td><td>Element-level (high) — quantities in linear ft or each</td></tr>
+        <tr><td>Inspection Cycle</td><td>24 months standard; 48 months for low-risk</td><td>Same cycle; Risk-based inspection intervals proposed</td></tr>
+        <tr><td>Scour Vulnerability</td><td>Separate 0–9 scour rating (Item 113)</td><td>Integrated into CoRe substructure elements</td></tr>
+        <tr><td>Fracture Critical</td><td>Item 92A fracture critical designation</td><td>Special inspection procedures element-encoded</td></tr>
+        <tr><td>Seismic Rating</td><td>Not explicitly in NBI items</td><td>Seismic vulnerability flag in SNBI element database</td></tr>
+        <tr><td>Federal Threshold</td><td>SR ≤ 50 + SD → eligible for replacement funds</td><td>HI &lt; 60 or CS4 elements → eligible for BFP funds</td></tr>
+        <tr><td>Reporting Format</td><td>140-item NBI submittal file</td><td>XML schema + Bridge element data submittal</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="tab-nbi-scale" class="tab-pane">
+    <div class="callout callout-blue">
+      <strong>NBI 0–9 Rating Scale</strong>
+      Component condition ratings where 9 = New / Excellent, 0 = Failed. Ratings ≤ 4 trigger "Structurally Deficient" classification. Rating 5 indicates minor section loss or cracking needing monitoring. Rating 3 is considered serious deterioration and requires load restriction or closure.
+    </div>
+    <div class="hi-scale">
+      <div class="hi-cell" style="background:rgba(255,95,109,.5)"><span class="hi-num">0</span>Failed</div>
+      <div class="hi-cell" style="background:rgba(255,95,109,.4)"><span class="hi-num">1</span>Imminent Failure</div>
+      <div class="hi-cell" style="background:rgba(255,95,109,.3)"><span class="hi-num">2</span>Critical</div>
+      <div class="hi-cell" style="background:rgba(255,95,109,.2)"><span class="hi-num">3</span>Serious</div>
+      <div class="hi-cell" style="background:rgba(255,154,60,.3)"><span class="hi-num">4</span>Poor</div>
+      <div class="hi-cell" style="background:rgba(255,209,102,.3)"><span class="hi-num">5</span>Fair</div>
+      <div class="hi-cell" style="background:rgba(255,209,102,.2)"><span class="hi-num">6</span>Satisfactory</div>
+      <div class="hi-cell" style="background:rgba(6,214,160,.2)"><span class="hi-num">7</span>Good</div>
+      <div class="hi-cell" style="background:rgba(6,214,160,.3)"><span class="hi-num">8</span>Very Good</div>
+      <div class="hi-cell" style="background:rgba(6,214,160,.4)"><span class="hi-num">9</span>Excellent</div>
+    </div>
+    <table class="index-table" style="margin-top:16px">
+      <thead><tr><th>NBI Rating</th><th>Category</th><th>Description</th><th>Action Required</th></tr></thead>
+      <tbody>
+        <tr><td>9</td><td><span class="badge badge-green">Excellent</span></td><td>New condition; no defects</td><td>Routine inspection</td></tr>
+        <tr><td>8</td><td><span class="badge badge-green">Very Good</span></td><td>No problems noted</td><td>Routine inspection</td></tr>
+        <tr><td>7</td><td><span class="badge badge-green">Good</span></td><td>Minor problems only</td><td>Routine monitoring</td></tr>
+        <tr><td>6</td><td><span class="badge badge-yellow">Satisfactory</span></td><td>Minor deterioration, structural elements still sound</td><td>Schedule maintenance</td></tr>
+        <tr><td>5</td><td><span class="badge badge-yellow">Fair</span></td><td>Minor section loss, cracking, spalling</td><td>Schedule maintenance action</td></tr>
+        <tr><td>4</td><td><span class="badge badge-orange">Poor</span></td><td>Advanced deterioration, may have load restrictions</td><td>Priority repair / SD designation</td></tr>
+        <tr><td>3</td><td><span class="badge badge-red">Serious</span></td><td>Loss of section, deterioration of primary elements</td><td>Load restriction; immediate repair</td></tr>
+        <tr><td>2</td><td><span class="badge badge-red">Critical</span></td><td>Advanced deterioration, structural integrity doubtful</td><td>Close or restrict immediately</td></tr>
+        <tr><td>1</td><td><span class="badge badge-red">Imminent Failure</span></td><td>Bridge closed; no load capacity</td><td>Urgent replacement</td></tr>
+        <tr><td>0</td><td><span class="badge badge-red">Failed</span></td><td>Failed; out of service</td><td>Replace</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="tab-snbi-scale" class="tab-pane">
+    <div class="callout callout-blue">
+      <strong>SNBI Condition States (CS) &amp; Health Index (HI)</strong>
+      Each CoRe element is inspected and assigned a condition state CS1–CS4 with quantities in the applicable unit. HI is calculated as: HI = Σ(CSi × Weight_i × Qty_i) / Σ(Total Potential Value). Higher HI = Better condition.
+    </div>
+    <div class="grid-4">
+      <div class="card"><div class="card-accent" style="background:var(--green)"></div><span class="card-tag tag-good">CS1 — Good</span><h4>Condition State 1</h4><p>No defects, minor wear. Element performs as intended. HI Contribution: 100% of potential value. No action required.</p></div>
+      <div class="card"><div class="card-accent" style="background:var(--yellow)"></div><span class="card-tag tag-fair">CS2 — Fair</span><h4>Condition State 2</h4><p>Minor defects — early surface deterioration, minor cracking, efflorescence. HI Contribution: 66–75% of potential value. Preventive maintenance.</p></div>
+      <div class="card"><div class="card-accent" style="background:var(--orange)"></div><span class="card-tag tag-poor">CS3 — Poor</span><h4>Condition State 3</h4><p>Moderate-to-advanced defects — section loss, delamination, active cracking. HI Contribution: 33–40% of potential value. Rehabilitation required.</p></div>
+      <div class="card"><div class="card-accent" style="background:var(--red)"></div><span class="card-tag tag-critical">CS4 — Severe</span><h4>Condition State 4</h4><p>Severe deterioration — imminent failure risk, collapse potential. HI Contribution: 0–10% of potential value. Replacement or emergency action.</p></div>
+    </div>
+    <div style="margin-top:24px">
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-dim);margin-bottom:8px">HEALTH INDEX RANGES</div>
+      <div class="hi-scale">
+        <div class="hi-cell" style="background:rgba(255,95,109,.4)"><span class="hi-num" style="color:var(--red)">0–39</span>Critical</div>
+        <div class="hi-cell" style="background:rgba(255,154,60,.3)"><span class="hi-num" style="color:var(--orange)">40–59</span>Poor</div>
+        <div class="hi-cell" style="background:rgba(255,209,102,.3)"><span class="hi-num" style="color:var(--yellow)">60–79</span>Fair</div>
+        <div class="hi-cell" style="background:rgba(6,214,160,.35)"><span class="hi-num" style="color:var(--green)">80–100</span>Good</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-transition" class="tab-pane">
+    <div class="callout">
+      <strong>SNBI Transition Timeline</strong>
+      FHWA published the final SNBI rule (23 CFR Part 650) effective January 2022. States must comply with SNBI element data collection by the deadlines below. Interim period allows both NBI and SNBI data collection.
+    </div>
+    <table class="index-table">
+      <thead><tr><th>State</th><th>NBI Status</th><th>SNBI Adoption</th><th>Element Data System</th><th>HI Reporting</th><th>Remarks</th></tr></thead>
+      <tbody>
+        <tr><td>Texas</td><td>Fully active</td><td><span class="badge badge-yellow">In Progress</span></td><td>TxDOT BridgeAsset / Pontis-derived</td><td>Partial</td><td>TxDOT piloting SNBI on NHS bridges first; ~54,000 bridges total</td></tr>
+        <tr><td>California</td><td>Fully active</td><td><span class="badge badge-yellow">In Progress</span></td><td>Caltrans BMS2 (replacing legacy BMS)</td><td>Partial</td><td>Caltrans maintaining parallel NBI/SNBI data streams through 2025</td></tr>
+        <tr><td>Pennsylvania</td><td>Fully active</td><td><span class="badge badge-green">Advanced</span></td><td>PennDOT BMS+ (AASHTOWare Bridge)</td><td>Full HI Reported</td><td>PennDOT was early SNBI adopter; bridges rated under both frameworks</td></tr>
+        <tr><td>Florida</td><td>Fully active</td><td><span class="badge badge-green">Advanced</span></td><td>FDOT STMAN / AASHTOWare Bridge</td><td>Full HI Reported</td><td>FDOT has robust element-level inspection program since 2015</td></tr>
+        <tr><td>New York</td><td>Fully active</td><td><span class="badge badge-yellow">In Progress</span></td><td>NYSDOT BridgeMaster / AASHTOWare</td><td>Partial</td><td>NYC DOT manages ~800 bridges separately; integration ongoing</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 3 — STATE DATA
+══════════════════════════════════════════════════════════════ -->
+<section id="states">
+  <div class="section-eyebrow">Section 03</div>
+  <h2 class="section-title">State-by-State Condition Data</h2>
+  <p class="section-desc">The following profiles summarize each state's bridge inventory size, overall condition distribution, average Health Index, primary deficiency drivers, and NBI/SNBI compliance status. Data sourced from FHWA National Bridge Inventory (2023 Annual Report) and respective state DOT bridge management systems.</p>
+
+  <div class="grid-5">
+
+    <!-- TEXAS -->
+    <div class="state-card">
+      <div class="sc-header">
+        <div class="sc-abbr">TX</div>
+        <div class="sc-name">Texas</div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-row"><span class="sc-label">Total Bridges</span><span class="sc-val">54,481</span></div>
+        <div class="sc-row"><span class="sc-label">NHS Bridges</span><span class="sc-val">8,670</span></div>
+        <div class="sc-row"><span class="sc-label">Average HI</span><span class="sc-val" style="color:var(--yellow)">72.4%</span></div>
+        <div class="sc-row"><span class="sc-label">Avg NBI (Deck)</span><span class="sc-val">6.1</span></div>
+        <div class="sc-row"><span class="sc-label">SD Bridges</span><span class="sc-val" style="color:var(--red)">2,071 (3.8%)</span></div>
+        <div class="sc-row"><span class="sc-label">Index Used</span><span class="sc-val"><span class="badge badge-blue">NBI</span><span class="badge badge-yellow">SNBI↗</span></span></div>
+        <div class="sc-cond">
+          <div class="cond-label">Condition Distribution</div>
+          <div class="cond-stack">
+            <div class="cs-good" style="width:48%"></div>
+            <div class="cs-fair" style="width:43%"></div>
+            <div class="cs-poor" style="width:9%"></div>
+          </div>
+          <div class="cond-legend">
+            <span><span class="cl-dot" style="background:var(--green)"></span>Good 48%</span>
+            <span><span class="cl-dot" style="background:var(--yellow)"></span>Fair 43%</span>
+            <span><span class="cl-dot" style="background:var(--red)"></span>Poor 9%</span>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:12px;line-height:1.5">Primary deficiencies: scour vulnerability, deck deterioration on AADT > 10,000 crossings, and aging post-tensioned concrete on Gulf Coast routes.</p>
+      </div>
+    </div>
+
+    <!-- CALIFORNIA -->
+    <div class="state-card">
+      <div class="sc-header">
+        <div class="sc-abbr">CA</div>
+        <div class="sc-name">California</div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-row"><span class="sc-label">Total Bridges</span><span class="sc-val">27,682</span></div>
+        <div class="sc-row"><span class="sc-label">NHS Bridges</span><span class="sc-val">5,140</span></div>
+        <div class="sc-row"><span class="sc-label">Average HI</span><span class="sc-val" style="color:var(--yellow)">74.8%</span></div>
+        <div class="sc-row"><span class="sc-label">Avg NBI (Deck)</span><span class="sc-val">6.3</span></div>
+        <div class="sc-row"><span class="sc-label">SD Bridges</span><span class="sc-val" style="color:var(--red)">1,921 (6.9%)</span></div>
+        <div class="sc-row"><span class="sc-label">Index Used</span><span class="sc-val"><span class="badge badge-blue">NBI</span><span class="badge badge-yellow">SNBI↗</span></span></div>
+        <div class="sc-cond">
+          <div class="cond-label">Condition Distribution</div>
+          <div class="cond-stack">
+            <div class="cs-good" style="width:52%"></div>
+            <div class="cs-fair" style="width:37%"></div>
+            <div class="cs-poor" style="width:11%"></div>
+          </div>
+          <div class="cond-legend">
+            <span><span class="cl-dot" style="background:var(--green)"></span>Good 52%</span>
+            <span><span class="cl-dot" style="background:var(--yellow)"></span>Fair 37%</span>
+            <span><span class="cl-dot" style="background:var(--red)"></span>Poor 11%</span>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:12px;line-height:1.5">Primary deficiencies: seismic vulnerability (pre-1989 Loma Prieta era), corrosion from marine exposure (Bay Area/coastal), and aging deck overlays on SR-1.</p>
+      </div>
+    </div>
+
+    <!-- PENNSYLVANIA -->
+    <div class="state-card" style="border-color:rgba(255,95,109,.35)">
+      <div class="sc-header" style="border-bottom-color:rgba(255,95,109,.2)">
+        <div class="sc-abbr" style="color:var(--red)">PA</div>
+        <div class="sc-name">Pennsylvania</div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-row"><span class="sc-label">Total Bridges</span><span class="sc-val">22,762</span></div>
+        <div class="sc-row"><span class="sc-label">NHS Bridges</span><span class="sc-val">3,840</span></div>
+        <div class="sc-row"><span class="sc-label">Average HI</span><span class="sc-val" style="color:var(--orange)">61.2%</span></div>
+        <div class="sc-row"><span class="sc-label">Avg NBI (Deck)</span><span class="sc-val">5.4</span></div>
+        <div class="sc-row"><span class="sc-label">SD Bridges</span><span class="sc-val" style="color:var(--red)">3,185 (14.0%)</span></div>
+        <div class="sc-row"><span class="sc-label">Index Used</span><span class="sc-val"><span class="badge badge-blue">NBI</span><span class="badge badge-green">SNBI✓</span></span></div>
+        <div class="sc-cond">
+          <div class="cond-label">Condition Distribution</div>
+          <div class="cond-stack">
+            <div class="cs-good" style="width:34%"></div>
+            <div class="cs-fair" style="width:46%"></div>
+            <div class="cs-poor" style="width:20%"></div>
+          </div>
+          <div class="cond-legend">
+            <span><span class="cl-dot" style="background:var(--green)"></span>Good 34%</span>
+            <span><span class="cl-dot" style="background:var(--yellow)"></span>Fair 46%</span>
+            <span><span class="cl-dot" style="background:var(--red)"></span>Poor 20%</span>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:12px;line-height:1.5">⚠ Highest poor condition percentage. Large inventory of aging steel truss & concrete T-beam bridges from 1930s–60s. Aggressive freeze-thaw cycles amplify deck deterioration.</p>
+      </div>
+    </div>
+
+    <!-- FLORIDA -->
+    <div class="state-card">
+      <div class="sc-header">
+        <div class="sc-abbr">FL</div>
+        <div class="sc-name">Florida</div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-row"><span class="sc-label">Total Bridges</span><span class="sc-val">12,622</span></div>
+        <div class="sc-row"><span class="sc-label">NHS Bridges</span><span class="sc-val">2,070</span></div>
+        <div class="sc-row"><span class="sc-label">Average HI</span><span class="sc-val" style="color:var(--green)">82.3%</span></div>
+        <div class="sc-row"><span class="sc-label">Avg NBI (Deck)</span><span class="sc-val">6.8</span></div>
+        <div class="sc-row"><span class="sc-label">SD Bridges</span><span class="sc-val" style="color:var(--yellow)">378 (3.0%)</span></div>
+        <div class="sc-row"><span class="sc-label">Index Used</span><span class="sc-val"><span class="badge badge-blue">NBI</span><span class="badge badge-green">SNBI✓</span></span></div>
+        <div class="sc-cond">
+          <div class="cond-label">Condition Distribution</div>
+          <div class="cond-stack">
+            <div class="cs-good" style="width:63%"></div>
+            <div class="cs-fair" style="width:31%"></div>
+            <div class="cs-poor" style="width:6%"></div>
+          </div>
+          <div class="cond-legend">
+            <span><span class="cl-dot" style="background:var(--green)"></span>Good 63%</span>
+            <span><span class="cl-dot" style="background:var(--yellow)"></span>Fair 31%</span>
+            <span><span class="cl-dot" style="background:var(--red)"></span>Poor 6%</span>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:12px;line-height:1.5">Best overall HI among the five states. Primary deficiencies: chloride-induced rebar corrosion on marine bridges, scour near tidal crossings, and aging prestressed concrete on I-4.</p>
+      </div>
+    </div>
+
+    <!-- NEW YORK -->
+    <div class="state-card">
+      <div class="sc-header">
+        <div class="sc-abbr">NY</div>
+        <div class="sc-name">New York</div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-row"><span class="sc-label">Total Bridges</span><span class="sc-val">17,561</span></div>
+        <div class="sc-row"><span class="sc-label">NHS Bridges</span><span class="sc-val">3,200</span></div>
+        <div class="sc-row"><span class="sc-label">Average HI</span><span class="sc-val" style="color:var(--yellow)">68.5%</span></div>
+        <div class="sc-row"><span class="sc-label">Avg NBI (Deck)</span><span class="sc-val">5.8</span></div>
+        <div class="sc-row"><span class="sc-label">SD Bridges</span><span class="sc-val" style="color:var(--red)">1,684 (9.6%)</span></div>
+        <div class="sc-row"><span class="sc-label">Index Used</span><span class="sc-val"><span class="badge badge-blue">NBI</span><span class="badge badge-yellow">SNBI↗</span></span></div>
+        <div class="sc-cond">
+          <div class="cond-label">Condition Distribution</div>
+          <div class="cond-stack">
+            <div class="cs-good" style="width:40%"></div>
+            <div class="cs-fair" style="width:44%"></div>
+            <div class="cs-poor" style="width:16%"></div>
+          </div>
+          <div class="cond-legend">
+            <span><span class="cl-dot" style="background:var(--green)"></span>Good 40%</span>
+            <span><span class="cl-dot" style="background:var(--yellow)"></span>Fair 44%</span>
+            <span><span class="cl-dot" style="background:var(--red)"></span>Poor 16%</span>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:12px;line-height:1.5">Dense urban inventory with high-volume crossings (GWB, Verrazano). Heavy deicing salt use is the primary deterioration driver. NYC DOT manages ~800 additional municipal bridges.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 4 — BRIDGE FAILURES
+══════════════════════════════════════════════════════════════ -->
+<section id="failures">
+  <div class="section-eyebrow">Section 04</div>
+  <h2 class="section-title">Notable Bridge Failure Cases</h2>
+  <p class="section-desc">The following documented failures illustrate critical inspection shortfalls, the NBI/SNBI ratings at time of failure, root cause classifications, and subsequent rehabilitation or replacement actions taken. These cases directly shaped current inspection standards.</p>
+
+  <!-- CASE 1: FIU Pedestrian Bridge -->
+  <div class="failure-card">
+    <div class="fc-header">
+      <div>
+        <div class="fc-title">FIU Pedestrian Bridge Collapse — Miami, FL</div>
+        <div class="fc-meta">Florida International University · March 15, 2018 · Sweetwater, Miami-Dade County</div>
+      </div>
+      <span class="fc-badge tag-critical">FL · Construction Failure</span>
+    </div>
+    <p style="font-size:13.5px;color:var(--text-dim);line-height:1.65">A 950-ton, 174-ft Accelerated Bridge Construction (ABC) pedestrian bridge — using the FIGG Engineers–designed Self-Propelled Modular Transporter (SPMT) method — collapsed onto SW 8th Street (US-41) during post-tensioning operations of the north end diagonal member (Member 11). Six fatalities and eight injuries resulted. An NTSB investigation found diagonal cracking noted in PT node 11 had been communicated to engineers two days prior but deemed non-critical. The failure was attributed to <strong style="color:#fff">inadequate post-tensioning force, shear failure in the unreinforced PT pocket, and inadequate engineering review during construction</strong>.</p>
+    <div class="fc-grid">
+      <div class="fc-stat"><div class="fc-stat-num">6</div><div class="fc-stat-lbl">Fatalities</div></div>
+      <div class="fc-stat"><div class="fc-stat-num">950 T</div><div class="fc-stat-lbl">Bridge Weight</div></div>
+      <div class="fc-stat"><div class="fc-stat-num">$14.2M</div><div class="fc-stat-lbl">Original Contract</div></div>
+    </div>
+    <div style="margin:12px 0;font-size:13px;color:var(--text-dim)">
+      <strong style="color:var(--text-faint);font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em">NBI/Index at Collapse: </strong> Under construction — NBI ratings not yet assigned. Engineering review deficiency. Root cause: PT node design flaw + inadequate QC review protocol.<br>
+      <strong style="color:var(--text-faint);font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em">Failure Mode: </strong> Shear failure at PT anchorage zone in diagonal member 11; progressive collapse of 174-ft span onto active roadway.
+    </div>
+    <div class="fc-rehab">
+      <div class="fc-rehab-label">Aftermath &amp; Regulatory Impact</div>
+      <p style="font-size:13px;color:var(--text-dim)">NTSB issued 11 safety recommendations to FHWA, FDOT, ACEC, and FIGG. FHWA issued Emergency Technical Assistance on ABC construction monitoring. Florida enacted SB 1346 mandating independent peer review for innovative bridge construction. A replacement pedestrian structure was designed and constructed. FDOT updated its ABC guidelines with mandatory PT verification during swan neck operations.</p>
+    </div>
+    <div style="margin-top:10px">
+      <span class="badge badge-red">ABC Construction</span>
+      <span class="badge badge-red">PT Failure</span>
+      <span class="badge badge-orange">Design Deficiency</span>
+      <span class="badge badge-blue">NTSB Investigated</span>
+    </div>
+  </div>
+
+  <!-- CASE 2: Fern Hollow Bridge -->
+  <div class="failure-card">
+    <div class="fc-header">
+      <div>
+        <div class="fc-title">Fern Hollow Bridge Collapse — Pittsburgh, PA</div>
+        <div class="fc-meta">Forbes Avenue over Fern Hollow Creek · January 28, 2022 · Pittsburgh, PA</div>
+      </div>
+      <span class="fc-badge tag-poor">PA · Deterioration Collapse</span>
+    </div>
+    <p style="font-size:13.5px;color:var(--text-dim);line-height:1.65">A 447-foot-long deck truss bridge over Fern Hollow Creek collapsed the morning of January 28, 2022, just hours before President Biden visited Pittsburgh to sign the Bipartisan Infrastructure Law. The bridge had been rated <strong style="color:#fff">Poor (NBI rating 4)</strong> for over a decade. The Port Authority bus with passengers was on the bridge at the time; 10 people were injured. The NTSB determined the primary cause was <strong style="color:var(--red)">severely deteriorated concrete abutments and end posts, aggravated by inadequate maintenance and deferred repair over multiple inspection cycles</strong>.</p>
+    <div class="fc-grid">
+      <div class="fc-stat"><div class="fc-stat-num">10</div><div class="fc-stat-lbl">Injuries</div></div>
+      <div class="fc-stat"><div class="fc-stat-num">NBI: 4</div><div class="fc-stat-lbl">Rating at Collapse</div></div>
+      <div class="fc-stat"><div class="fc-stat-num">$25.3M</div><div class="fc-stat-lbl">Replacement Cost</div></div>
+    </div>
+    <div style="margin:12px 0;font-size:13px;color:var(--text-dim)">
+      <strong style="color:var(--text-faint);font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em">NBI at Failure: </strong> Substructure rating 4 (Poor); overall SD designation since 2011. Abutment end posts rated NBI 2 (Critical) in 2021 inspection — repair not actioned before collapse.<br>
+      <strong style="color:var(--text-faint);font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em">Failure Mode: </strong> Abutment end post failure → progressive collapse of deck truss span into ravine. Deferred maintenance over 10+ years contributed directly.
+    </div>
+    <div class="fc-rehab">
+      <div class="fc-rehab-label">Rehabilitation Response</div>
+      <p style="font-size:13px;color:var(--text-dim)">PennDOT completed emergency replacement bridge in February 2023 (13 months). $25.3M funded through BIF emergency relief. NTSB recommended FHWA establish mandatory timelines between deficiency identification and repair for bridges rated ≤ 3 on any primary component. Pittsburgh accelerated inspection of all 188 city bridges.</p>
+    </div>
+    <div style="margin-top:10px">
+      <span class="badge badge-red">NBI Poor Rating</span>
+      <span class="badge badge-orange">Deferred Maintenance</span>
+      <span class="badge badge-purple">Substructure Failure</span>
+      <span class="badge badge-blue">Emergency Replacement</span>
+    </div>
+  </div>
+
+  <!-- CASE 3: I-35W Mississippi -->
+  <div class="failure-card" style="border-left-color:var(--orange)">
+    <div class="fc-header">
+      <div>
+        <div class="fc-title">I-35W Mississippi River Bridge — Minneapolis, MN</div>
+        <div class="fc-meta">(Reference Case – Adjacent State) August 1, 2007 · Minneapolis, MN · NTSB AAR-08/03</div>
+      </div>
+      <span class="fc-badge tag-fair">Reference Case · Gusset Plate Failure</span>
+    </div>
+    <p style="font-size:13.5px;color:var(--text-dim);line-height:1.65">While not in the five study states, this nationally consequential failure directly shaped inspection protocols now applied in all states. The 1,907-ft steel truss bridge (built 1967) collapsed during evening rush hour. NTSB determined the root cause was <strong style="color:#fff">undersized U10 gusset plates (design error)</strong> combined with additional load from construction equipment and materials on the bridge. NBI ratings were satisfactory (Deck 6, Super 7, Sub 8) — demonstrating that NBI component ratings can miss localized critical defects.</p>
+    <div class="fc-grid">
+      <div class="fc-stat"><div class="fc-stat-num">13</div><div class="fc-stat-lbl">Fatalities</div></div>
+      <div class="fc-stat"><div class="fc-stat-num">NBI: 6/7/8</div><div class="fc-stat-lbl">Rating at Failure</div></div>
+      <div class="fc-stat"><div class="fc-stat-num">$234M</div><div class="fc-stat-lbl">Replacement Cost</div></div>
+    </div>
+    <div class="fc-rehab">
+      <div class="fc-rehab-label">National Impact on Inspection Practice</div>
+      <p style="font-size:13px;color:var(--text-dim)">All five study states conducted emergency gusset plate inspections on similar truss bridges. FHWA issued Technical Advisory T5140.29 mandating load rating checks at fracture-critical members. This failure was a primary driver toward SNBI's element-level inspection, recognizing that component ratings mask localized failures. PA, NY, and TX each re-rated dozens of steel truss bridges following this collapse.</p>
+    </div>
+    <div style="margin-top:10px">
+      <span class="badge badge-red">Design Defect</span>
+      <span class="badge badge-orange">Gusset Plate</span>
+      <span class="badge badge-blue">Fracture Critical</span>
+      <span class="badge badge-purple">Changed NBIS Policy</span>
+    </div>
+  </div>
+
+  <!-- CASE 4: Mianus River Bridge -->
+  <div class="failure-card" style="border-left-color:var(--purple)">
+    <div class="fc-header">
+      <div>
+        <div class="fc-title">Mianus River Bridge Collapse — Greenwich, CT (Reference)</div>
+        <div class="fc-meta">I-95 over Mianus River · June 28, 1983 · Greenwich, CT</div>
+      </div>
+      <span class="fc-badge" style="background:rgba(180,142,248,.15);color:var(--purple);border:1px solid rgba(180,142,248,.3)">Historical Reference</span>
+    </div>
+    <p style="font-size:13.5px;color:var(--text-dim);line-height:1.65">This collapse — caused by a <strong style="color:#fff">corroded pin-and-hanger assembly hidden inside the bridge structure</strong> — was undetectable by standard visual inspection at the time. Three fatalities. The bridge carried 100,000+ vehicles/day on I-95. This case triggered the creation of modern Special Inspection procedures for pin-and-hanger assemblies and was a foundational driver for fracture-critical inspection protocols now active in all five study states.</p>
+    <div class="fc-rehab">
+      <div class="fc-rehab-label">Legacy &amp; State Impact</div>
+      <p style="font-size:13px;color:var(--text-dim)">NY, PA, and CT immediately launched audits of all pin-and-hanger bridges. FHWA NBIS was revised in 1986 to add Fracture Critical Member inspection categories. New York's Tappan Zee (original) and PA's countless pin-and-hanger deck trusses trace their enhanced inspection programs directly to this event. All five study states maintain active pin-and-hanger registries with 2-year special inspection cycles.</p>
+    </div>
+  </div>
+
+  <!-- CASE 5: I-10 over Sabine River TX/LA -->
+  <div class="failure-card">
+    <div class="fc-header">
+      <div>
+        <div class="fc-title">TX Overpass Failures — Hurricane Harvey Scour, 2017</div>
+        <div class="fc-meta">Multiple TxDOT Structures · Gulf Coast Region · August–September 2017</div>
+      </div>
+      <span class="fc-badge tag-poor">TX · Scour / Flood Failure</span>
+    </div>
+    <p style="font-size:13.5px;color:var(--text-dim);line-height:1.65">Hurricane Harvey (2017) caused catastrophic flooding across the Texas Gulf Coast, critically undermining the foundations of several highway structures. The <strong style="color:#fff">US-59 bridge over the Guadalupe River near Victoria</strong> suffered severe scour undermining pier footings — rated NBI scour vulnerability 3 (scour critical; corrective action required). Dozens of smaller county bridges on the Gulf Coast were lost or severely damaged. Total TxDOT bridge repair costs from Harvey exceeded <strong style="color:var(--accent)">$180 million</strong>.</p>
+    <div class="fc-grid">
+      <div class="fc-stat"><div class="fc-stat-num">50+</div><div class="fc-stat-lbl">Bridges Damaged</div></div>
+      <div class="fc-stat"><div class="fc-stat-num">$180M+</div><div class="fc-stat-lbl">Repair/Replace Cost</div></div>
+      <div class="fc-stat"><div class="fc-stat-num">NBI: 3</div><div class="fc-stat-lbl">Scour Rating (pre-event)</div></div>
+    </div>
+    <div class="fc-rehab">
+      <div class="fc-rehab-label">Scour Countermeasure Implementation</div>
+      <p style="font-size:13px;color:var(--text-dim)">TxDOT accelerated its Scour Countermeasure Program: riprap installation, pier encasement, and footing extensions on 200+ scour-critical bridges. Real-time streamflow monitoring (USGS gauges) linked to bridge closure thresholds implemented on critical crossings. TxDOT's 2020 Hydraulic Design Manual updated scour vulnerability assessment to align with SNBI element-level approach.</p>
+    </div>
+    <div style="margin-top:10px">
+      <span class="badge badge-red">Scour Critical</span>
+      <span class="badge badge-orange">Hurricane Flooding</span>
+      <span class="badge badge-blue">Foundation Undermining</span>
+      <span class="badge badge-green">Riprap Countermeasures</span>
+    </div>
+  </div>
+
+  <!-- CASE 6: Verrazano & George Washington, NY -->
+  <div class="failure-card" style="border-left-color:var(--yellow)">
+    <div class="fc-header">
+      <div>
+        <div class="fc-title">NY Critical Bridge Rehabilitation — GWB & Verrazano-Narrows</div>
+        <div class="fc-meta">Port Authority of NY/NJ &amp; MTA Bridges · 2010–2024 Ongoing</div>
+      </div>
+      <span class="fc-badge tag-fair">NY · Long-Term Rehabilitation</span>
+    </div>
+    <p style="font-size:13.5px;color:var(--text-dim);line-height:1.65">Not a sudden failure, but a critical ongoing case study in large-span suspension bridge rehabilitation. The <strong style="color:#fff">George Washington Bridge</strong> (built 1931) has undergone continuous maintenance and rehabilitation since 2010 — deck replacement, suspender rope replacement (all 592 suspenders on both decks), and tower steel repairs, totaling over <strong style="color:var(--accent)">$1.7 billion</strong>. The <strong style="color:#fff">Verrazano-Narrows Bridge</strong> deck replacement program (2017–ongoing) addresses severe chloride-induced deck deterioration on both levels of this 4,260-ft main span structure.</p>
+    <div class="fc-grid">
+      <div class="fc-stat"><div class="fc-stat-num">$1.7B</div><div class="fc-stat-lbl">GWB Rehab Total</div></div>
+      <div class="fc-stat"><div class="fc-stat-num">592</div><div class="fc-stat-lbl">Suspenders Replaced</div></div>
+      <div class="fc-stat"><div class="fc-stat-num">2031</div><div class="fc-stat-lbl">Est. Completion (VNB)</div></div>
+    </div>
+    <div class="fc-rehab">
+      <div class="fc-rehab-label">Ongoing Rehabilitation Phases</div>
+      <p style="font-size:13px;color:var(--text-dim)">GWB: upper level deck replacement completed 2015; lower level 2017; suspender replacement phased 2010–2023; tower painting ongoing. Verrazano: lower deck replacement initiated 2017, upper deck 2025–2031. PANYNJ and MTA use element-level BMS with HI tracking on all spans. Work conducted under traffic with lane restrictions and nighttime full closures on scheduled maintenance weekends.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 5 — REHABILITATION METHODS
+══════════════════════════════════════════════════════════════ -->
+<section id="rehab">
+  <div class="section-eyebrow">Section 05</div>
+  <h2 class="section-title">Rehabilitation &amp; Construction Methods</h2>
+  <p class="section-desc">Bridge rehabilitation is stratified by deficiency type, element HI, remaining service life, and available funding. The following methods represent the principal construction approaches applied across the five study states, from preventive maintenance through full replacement.</p>
+
+  <div class="grid-3" style="gap:20px">
+    <div class="method-card">
+      <div class="method-icon">🛡️</div>
+      <div class="method-title">Deck Overlay Systems</div>
+      <div class="method-body">Application of latex-modified concrete (LMC), silica fume overlay (SFO), or Ultra-High Performance Concrete (UHPC) deck overlays to restore deck integrity and extend service life. UHPC overlays achieve 4× the compressive strength of conventional concrete with near-zero chloride permeability. Used extensively in FL, NY, and PA for marine-exposed and salt-exposure decks.</div>
+      <div class="method-specs">
+        <div class="ms-item"><span class="ms-key">Typical HI Trigger</span><span class="ms-val">HI 60–75; CS2–CS3 deck</span></div>
+        <div class="ms-item"><span class="ms-key">Duration</span><span class="ms-val">2–8 weeks per span</span></div>
+        <div class="ms-item"><span class="ms-key">Cost Range</span><span class="ms-val">$15–$45/SF (LMC/SFO)<br>$80–$120/SF (UHPC)</span></div>
+        <div class="ms-item"><span class="ms-key">Service Life Extension</span><span class="ms-val">15–25 years</span></div>
+      </div>
+    </div>
+
+    <div class="method-card">
+      <div class="method-icon">🔩</div>
+      <div class="method-title">Full Deck Replacement</div>
+      <div class="method-body">Complete removal and replacement of the bridge deck slab, including reinforcement, waterproofing membrane, and wearing course. May include replacement of expansion joints, approach slabs, and parapets. ABC techniques (prefabricated deck panels) minimize traffic disruption. Common in PA for freeze-thaw damaged decks and NY for deicing-salt-damaged urban bridges.</div>
+      <div class="method-specs">
+        <div class="ms-item"><span class="ms-key">Typical HI Trigger</span><span class="ms-val">HI &lt;55; NBI Deck ≤4</span></div>
+        <div class="ms-item"><span class="ms-key">Duration</span><span class="ms-val">3–18 months</span></div>
+        <div class="ms-item"><span class="ms-key">Cost Range</span><span class="ms-val">$80–$200/SF deck area</span></div>
+        <div class="ms-item"><span class="ms-key">Service Life Extension</span><span class="ms-val">30–50 years</span></div>
+      </div>
+    </div>
+
+    <div class="method-card">
+      <div class="method-icon">⚙️</div>
+      <div class="method-title">Superstructure Replacement</div>
+      <div class="method-body">Replacement of girders, beams, trusses, or floor systems while retaining serviceable substructure elements. Accelerated Bridge Construction (ABC) using SPMT transport of prefabricated superstructures reduces closure to hours or days. Applied to aging steel plate girder bridges in TX and CA where substructure condition is CS1–CS2.</div>
+      <div class="method-specs">
+        <div class="ms-item"><span class="ms-key">Typical HI Trigger</span><span class="ms-val">HI &lt;50; NBI Super ≤3</span></div>
+        <div class="ms-item"><span class="ms-key">Duration</span><span class="ms-val">6–24 months (conv.)<br>48–96 hrs (ABC/SPMT)</span></div>
+        <div class="ms-item"><span class="ms-key">Cost Range</span><span class="ms-val">$500K–$5M/span</span></div>
+        <div class="ms-item"><span class="ms-key">Service Life Extension</span><span class="ms-val">50–75 years</span></div>
+      </div>
+    </div>
+
+    <div class="method-card">
+      <div class="method-icon">🏗️</div>
+      <div class="method-title">Substructure &amp; Foundation Repair</div>
+      <div class="method-body">Pier and abutment repair using jacketing (concrete encasement), carbon fiber reinforced polymer (CFRP) wrapping, cathodic protection systems, and crack injection. Footing extensions and micropile underpinning address scour damage. Seismic column retrofit in CA uses CFRP or steel jacketing for improved ductility.</div>
+      <div class="method-specs">
+        <div class="ms-item"><span class="ms-key">Typical HI Trigger</span><span class="ms-val">CS3–CS4 substructure</span></div>
+        <div class="ms-item"><span class="ms-key">Duration</span><span class="ms-val">4–18 months</span></div>
+        <div class="ms-item"><span class="ms-key">Cost Range</span><span class="ms-val">$50K–$2M/pier</span></div>
+        <div class="ms-item"><span class="ms-key">Service Life Extension</span><span class="ms-val">20–40 years</span></div>
+      </div>
+    </div>
+
+    <div class="method-card">
+      <div class="method-icon">🌊</div>
+      <div class="method-title">Scour Countermeasures</div>
+      <div class="method-body">Installation of riprap aprons, articulated concrete blocks (ACB), gabion mattresses, rock toe protection, and grouted rock riprap at scour-critical piers and abutments. Pier footing extensions and sheet pile cofferdams provide deeper protection. Used extensively in TX Gulf Coast, FL tidal crossings, and NY river crossings after high-water events.</div>
+      <div class="method-specs">
+        <div class="ms-item"><span class="ms-key">Typical Trigger</span><span class="ms-val">NBI Scour ≤3; post-flood</span></div>
+        <div class="ms-item"><span class="ms-key">Duration</span><span class="ms-val">2–8 weeks/pier</span></div>
+        <div class="ms-item"><span class="ms-key">Cost Range</span><span class="ms-val">$25K–$500K/pier</span></div>
+        <div class="ms-item"><span class="ms-key">Service Life Extension</span><span class="ms-val">20–30 years</span></div>
+      </div>
+    </div>
+
+    <div class="method-card">
+      <div class="method-icon">🔬</div>
+      <div class="method-title">CFRP Strengthening</div>
+      <div class="method-body">Carbon Fiber Reinforced Polymer (CFRP) bonded or laminated systems applied to flexural deficient girders, columns, and deck slabs to restore load capacity without adding dead load. NSM (Near Surface Mounted) CFRP bars address tension zone deficiencies in T-beams. FRP composites are used for pier confinement in seismic zones (CA) and for flexural strengthening in PA's aging T-beam inventory.</div>
+      <div class="method-specs">
+        <div class="ms-item"><span class="ms-key">Typical HI Trigger</span><span class="ms-val">Load rating &lt; HS-20; CS3</span></div>
+        <div class="ms-item"><span class="ms-key">Duration</span><span class="ms-val">1–6 weeks</span></div>
+        <div class="ms-item"><span class="ms-key">Cost Range</span><span class="ms-val">$20–$80/SF CFRP area</span></div>
+        <div class="ms-item"><span class="ms-key">Service Life Extension</span><span class="ms-val">15–30 years</span></div>
+      </div>
+    </div>
+
+    <div class="method-card">
+      <div class="method-icon">🌉</div>
+      <div class="method-title">Accelerated Bridge Construction (ABC)</div>
+      <div class="method-body">Prefabrication of bridge elements (superstructure, piers, abutments) off-site then rapid assembly using SPMT, cranes, or slide-in techniques. Minimizes traffic disruption from months to hours. Used for interstate crossings in TX and CA. Florida pioneered ABC with the SPMT-delivered bridges in Miami; FDOT's ABC program is among the most advanced nationally.</div>
+      <div class="method-specs">
+        <div class="ms-item"><span class="ms-key">Best For</span><span class="ms-val">High-AADT urban bridges</span></div>
+        <div class="ms-item"><span class="ms-key">Duration</span><span class="ms-val">48–96 hrs closure (SPMT)</span></div>
+        <div class="ms-item"><span class="ms-key">Cost Premium</span><span class="ms-val">+15–30% vs conventional</span></div>
+        <div class="ms-item"><span class="ms-key">User Cost Savings</span><span class="ms-val">Can offset premium 2–5×</span></div>
+      </div>
+    </div>
+
+    <div class="method-card">
+      <div class="method-icon">⚡</div>
+      <div class="method-title">Seismic Retrofit (CA-specific)</div>
+      <div class="method-body">California's Seismic Retrofit Program (SRP) — launched after the 1989 Loma Prieta and 1994 Northridge earthquakes — involves column jacketing (steel or CFRP), bent cap strengthening, abutment modification, and isolation bearing installation. Over 2,400 state-owned bridges and 2,400 local bridges have been retrofitted. The program is widely considered the world's largest bridge seismic retrofit effort.</div>
+      <div class="method-specs">
+        <div class="ms-item"><span class="ms-key">Trigger</span><span class="ms-val">Pre-1992 seismic design; PGA &gt; 0.2g</span></div>
+        <div class="ms-item"><span class="ms-key">Duration</span><span class="ms-val">3–24 months/structure</span></div>
+        <div class="ms-item"><span class="ms-key">Cost Range</span><span class="ms-val">$100K–$5M/structure</span></div>
+        <div class="ms-item"><span class="ms-key">Total Program Cost</span><span class="ms-val">&gt;$12B through 2024</span></div>
+      </div>
+    </div>
+
+    <div class="method-card">
+      <div class="method-icon">🔄</div>
+      <div class="method-title">Full Bridge Replacement</div>
+      <div class="method-body">Complete demolition and replacement when HI &lt; 40, remaining service life &lt; 10 years, or when rehabilitation cost exceeds 75% of replacement value. May include roadway realignment, geometric upgrades (width, clearance), load rating improvements (HS-25 or higher), and resiliency features (scour countermeasures, seismic isolation). Priority under FHWA Bridge Formula Program (BFP).</div>
+      <div class="method-specs">
+        <div class="ms-item"><span class="ms-key">Typical HI Trigger</span><span class="ms-val">HI &lt; 40; NBI ≤ 3</span></div>
+        <div class="ms-item"><span class="ms-key">Duration</span><span class="ms-val">12 months – 5 years</span></div>
+        <div class="ms-item"><span class="ms-key">Cost Range</span><span class="ms-val">$500K–$500M+</span></div>
+        <div class="ms-item"><span class="ms-key">Service Life</span><span class="ms-val">75–100 years (new)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-blue" style="margin-top:32px">
+    <strong>Preventive Maintenance vs. Reactive Repair</strong>
+    FHWA data shows that every $1 spent on preventive maintenance (HI ≥ 70) avoids approximately $5–$8 in future rehabilitation or replacement costs. All five study states have adopted Preservation-First policies under their respective TAMP (Transportation Asset Management Plans) as required under MAP-21 / FAST Act, directing ≥ 50% of bridge capital spending to preservation activities rather than reactive replacement.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 6 — COST, TIME, DURATION FACTORS
+══════════════════════════════════════════════════════════════ -->
+<section id="costs">
+  <div class="section-eyebrow">Section 06</div>
+  <h2 class="section-title">Cost, Duration &amp; Influencing Factors</h2>
+  <p class="section-desc">Bridge rehabilitation cost and duration are functions of many interacting variables. The table below summarizes typical cost ranges and durations by method, followed by key influencing factors that most critically determine project scope.</p>
+
+  <table class="cost-table">
+    <thead>
+      <tr><th>Rehabilitation Method</th><th>Typical Scope</th><th>Cost Range (2024 $)</th><th>Duration</th><th>HI Trigger</th><th>States Most Active</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Deck Overlay (LMC/SFO)</td><td>Single span, 2-lane bridge ~5,000 SF</td><td>$75K–$225K</td><td>2–4 wks</td><td>HI 65–75</td><td>PA, NY, FL</td></tr>
+      <tr><td>UHPC Deck Overlay</td><td>Single span, 2-lane bridge ~5,000 SF</td><td>$400K–$600K</td><td>3–6 wks</td><td>HI 55–70</td><td>NY, CA, FL</td></tr>
+      <tr><td>Full Deck Replacement</td><td>4-span, 4-lane bridge ~20,000 SF</td><td>$2.0M–$4.5M</td><td>6–18 mo</td><td>HI &lt;55</td><td>PA, NY, TX</td></tr>
+      <tr><td>Superstructure Replacement (ABC)</td><td>2-span interstate overpass</td><td>$3.0M–$8.0M</td><td>48–96 hr closure</td><td>HI &lt;50</td><td>FL, TX, CA</td></tr>
+      <tr><td>Superstructure Replacement (conventional)</td><td>2-span interstate overpass</td><td>$2.5M–$6.0M</td><td>8–18 mo</td><td>HI &lt;50</td><td>PA, NY, TX</td></tr>
+      <tr><td>CFRP Strengthening</td><td>8 T-beams, 60-ft span</td><td>$80K–$300K</td><td>2–6 wks</td><td>CS3; LR deficient</td><td>PA, CA, NY</td></tr>
+      <tr><td>Pier/Abutment Repair (jacketing)</td><td>4 piers, concrete encasement</td><td>$200K–$800K</td><td>4–12 wks</td><td>CS3 substructure</td><td>TX, FL, NY</td></tr>
+      <tr><td>Scour Countermeasures</td><td>Riprap at 4 piers</td><td>$100K–$400K</td><td>2–6 wks</td><td>Scour ≤3; post-flood</td><td>TX, FL, PA</td></tr>
+      <tr><td>Seismic Retrofit (column jacket)</td><td>4-column bent, CFRP wrap</td><td>$250K–$1.5M</td><td>3–8 wks</td><td>Pre-1992; PGA &gt;0.2g</td><td>CA</td></tr>
+      <tr><td>Full Bridge Replacement (2-lane local)</td><td>100-ft single span replacement</td><td>$800K–$2.5M</td><td>6–18 mo</td><td>HI &lt;40</td><td>PA, TX, NY</td></tr>
+      <tr><td>Full Bridge Replacement (NHS, multi-span)</td><td>I-highway overpass, 4+ spans</td><td>$15M–$100M+</td><td>2–5 yrs</td><td>HI &lt;40</td><td>All states</td></tr>
+      <tr><td>Suspension Bridge Cable/Deck Rehab</td><td>Major toll bridge (GWB, VNB)</td><td>$500M–$2.0B</td><td>10–20 yrs phased</td><td>Ongoing HI &lt;65</td><td>NY, CA</td></tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:36px">
+    <h3 style="font-family:var(--font-head);font-size:20px;color:#fff;margin-bottom:20px">Key Influencing Factors</h3>
+    <div class="grid-3">
+      <div class="card"><div class="card-accent" style="background:var(--accent)"></div>
+        <h4>Traffic Volume (AADT)</h4>
+        <p>High-AADT bridges (>50,000 vpd) require staged construction, lane rental penalties, and often ABC methods to minimize user costs. User cost (delay, VOC) can exceed construction cost on major corridors — a critical driver in NY and CA. FHWA QUEWZ or BenCost tools quantify user impacts.</p>
+      </div>
+      <div class="card"><div class="card-accent" style="background:var(--accent2)"></div>
+        <h4>Bridge Classification &amp; Strategic Importance</h4>
+        <p>NHS bridges, emergency routes, freight corridors (Interstates, US routes), and evacuation routes receive priority funding and accelerated timelines. FL evacuation bridges (I-4, I-75, US-1) have mandated back-up construction timelines for hurricane season preparation.</p>
+      </div>
+      <div class="card"><div class="card-accent" style="background:var(--accent3)"></div>
+        <h4>Environmental Exposure</h4>
+        <p>Marine / coastal exposure (FL, CA coastal, NY harbor) requires stainless steel or epoxy-coated rebar, high-performance concrete with SCMs, and cathodic protection. Freeze-thaw cycles (PA, upstate NY) mandate entrained air concrete and low w/cm ratios. Floodplain regulatory requirements add permitting duration (Corps Section 404, FEMA NFIP).</p>
+      </div>
+      <div class="card"><div class="card-accent" style="background:var(--red)"></div>
+        <h4>Material &amp; Labor Market Conditions</h4>
+        <p>Structural steel prices fluctuated ±40% between 2020–2023 due to supply chain disruptions (COVID, tariffs). Concrete and aggregate costs vary regionally. Labor shortages in construction trades are projected to persist through 2027. CA and NY have the highest labor costs nationally; TX has lowest among the five states.</p>
+      </div>
+      <div class="card"><div class="card-accent" style="background:var(--yellow)"></div>
+        <h4>Utility Conflicts &amp; Right-of-Way</h4>
+        <p>Urban bridges (NYC, Houston, Miami, LA, Philadelphia) often have complex utility conflicts — gas mains, water/sewer, electrical conduits, fiber — requiring utility relocation that can add 12–24 months to timelines. R/W acquisition for widened approaches is frequently the critical path item on replacement projects.</p>
+      </div>
+      <div class="card"><div class="card-accent" style="background:var(--purple)"></div>
+        <h4>Permitting &amp; Regulatory Timeline</h4>
+        <p>Bridges over navigable waters require USCG Section 9 permits (4–12 months). NEPA environmental review (CE, EA, or EIS) ranges from 6 months to 5+ years. Section 106 historic preservation review applies to many PA and NY bridges. Environmental Justice (EJ) analyses under USDOT Order 5610.2c add community engagement timelines.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 7 — ALTERNATIVE ROUTE PLANNING
+══════════════════════════════════════════════════════════════ -->
+<section id="altroutes">
+  <div class="section-eyebrow">Section 07</div>
+  <h2 class="section-title">Alternative Route Planning</h2>
+  <p class="section-desc">When a bridge requires extended closure (typically &gt;4 weeks), a formal Detour Route Study must be conducted analyzing alternative routing feasibility, impacts on secondary bridge/road infrastructure, emergency access, freight continuity, and public communication. Below are documented detour frameworks for long-term rehabilitation projects in the five study states.</p>
+
+  <div class="callout callout-red">
+    <strong>When Alternative Routes Are Required</strong>
+    FHWA Emergency Relief Program (ER) and the Bridge Formula Program both require formal detour route documentation for any bridge closure expected to exceed 48 hours on NHS routes, or 7 days on local routes carrying emergency vehicles. The detour route must be structurally adequate to carry the diverted traffic loads — often triggering load ratings and potential repairs on secondary bridges.
+  </div>
+
+  <div class="grid-2" style="margin-top:28px;gap:20px">
+    <div class="route-card">
+      <div class="route-title">Pennsylvania — Urban Bridge Closures (Pittsburgh / Philadelphia)</div>
+      <div class="route-sub">Fern Hollow Bridge Replacement · Forbes Ave Corridor · 2022–2023</div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:14px">Forbes Avenue carries ~20,000 vpd through Squirrel Hill and is a primary E–W arterial. The 13-month detour required a comprehensive multi-modal alternative plan.</p>
+      <ol class="route-steps">
+        <li>Primary vehicular detour: Murray Ave → Beacon St → Shady Ave (added ~1.2 mi / 4 min travel time)</li>
+        <li>Freight restriction: No trucks >2.5 tons on detour surface streets — I-376 designated for commercial vehicles</li>
+        <li>Port Authority Transit: Route 61 relocated to Penn Ave with temporary stops; added 6-min headway during peak</li>
+        <li>Pedestrian/bicycle: Temporary multi-use path alongside Fern Hollow Creek authorized through Frick Park</li>
+        <li>Emergency services: Pittsburgh EMS and Fire pre-positioned resources in Squirrel Hill; added 12-min worst-case EMS response time acknowledged and mitigated</li>
+        <li>Public communication: City-operated 311 call center; real-time updates on Pittsburgh.gov; VMS signage at 12 locations</li>
+        <li>Secondary bridge audit: Pittsburgh Public Works load-rated all 6 bridges on detour route; two required temporary weight restrictions</li>
+      </ol>
+    </div>
+
+    <div class="route-card">
+      <div class="route-title">Texas — Rural Highway Bridge Closures (Gulf Coast)</div>
+      <div class="route-sub">Post-Harvey US-59 Guadalupe River Crossings · 2017–2019</div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:14px">Scour-damaged bridges on US-59 in Victoria County required closures of 6–14 months. Rural Texas context means detours can add 30–60+ miles.</p>
+      <ol class="route-steps">
+        <li>Primary detour: US-77 via Victoria city center (added 28 mi / 35 min) — TxDOT coordinated with Victoria MPO</li>
+        <li>Emergency access: TxDOT installed temporary Bailey bridge (160-ft modular steel) within 72 hours for emergency vehicle access during initial closure period</li>
+        <li>Freight continuity: TxDOT issued oversize/overweight permits on US-77 for agricultural and energy sector trucks</li>
+        <li>USPS / school bus routes: Coordinated with USPS and Victoria ISD for alternative routing — added 45 min to several school routes</li>
+        <li>Public communication: TxDOT district office media releases; TxDOT DriveTexas website updated in real time; 511 Texas system</li>
+        <li>Economic impact monitoring: TxDOT and Victoria EDC tracked fuel, freight, and retail impacts during closure; estimated $1.2M/month economic impact on local commerce</li>
+      </ol>
+    </div>
+
+    <div class="route-card">
+      <div class="route-title">New York — Major Bridge Rehabilitation (GWB / Verrazano)</div>
+      <div class="route-sub">PANYNJ George Washington Bridge Deck Replacement · 2011–2017</div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:14px">The GWB carries 102 million vehicles/year — the world's busiest bridge. Deck replacement required phased work with no full closure, only lane-by-lane staged construction.</p>
+      <ol class="route-steps">
+        <li>No full closure protocol: Lane-by-lane deck panel replacement using prefabricated deck modules — each 8-ft panel replaced in a single overnight window (10 PM–5 AM)</li>
+        <li>Staged construction: 4 phases over 6 years, maintaining minimum 4 lanes operational at all times on upper level; lower level closed in sectors</li>
+        <li>Regional detour: NYSDOT / NJDOT coordinated Tappan Zee Bridge and Lincoln/Holland Tunnel as overflow relief — real-time monitoring and traveler info via 511NY and 511NJ</li>
+        <li>Transit enhancement: NJ Transit added express bus service on GWB Bus Station routes; PATH ridership data monitored for overflow impacts</li>
+        <li>Freight management: Port Authority partnered with NJTPA on overnight truck diversion to Lincoln Tunnel on major panel nights</li>
+        <li>Construction scheduling: Work windows avoided Thanksgiving/Christmas peak periods and major stadium events by programmatic scheduling agreement with MTA and local municipalities</li>
+      </ol>
+    </div>
+
+    <div class="route-card">
+      <div class="route-title">Florida — ABC Construction Traffic Management</div>
+      <div class="route-sub">FDOT I-4 Ultimate Interchange &amp; Multiple Bridge Replacements · 2015–2022</div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:14px">Florida's ABC program allows full bridge replacement over active highways in 48–96 hours via SPMT, requiring intensive short-term traffic management rather than extended detours.</p>
+      <ol class="route-steps">
+        <li>Traffic management plan (TMP): Full interstate closure (full stop or contraflow) for the 48–72-hour SPMT window — coordinated 6 months in advance with local MPO and emergency services</li>
+        <li>Detour routing: FDOT pre-designates Official Detour Routes with signed alternate paths; parallel SR-408 and SR-528 used for I-4 moves</li>
+        <li>Real-time ITS: FL511 and FDOT SunGuide TMC managed all DMS, CCTV, and ramp metering to guide traffic during the SPMT window</li>
+        <li>Emergency services: Pre-positioned FDOT HERO units and FHP troopers at strategic intervals; FDOT coordinated with county EMS for temporary post assignments</li>
+        <li>Public communication: 30-day advance notice; media partner (TV/radio traffic); highway advisory radio (HAR) at 530 AM within 5-mile radius</li>
+        <li>Hurricane season coordination: All major moves scheduled Oct–May to avoid hurricane season risk of an incomplete structure being exposed to a storm event</li>
+      </ol>
+    </div>
+
+    <div class="route-card" style="grid-column:1 / -1">
+      <div class="route-title">California — Seismic Emergency &amp; Long-Term I-880 / Bay Area Bridges</div>
+      <div class="route-sub">SF-Oakland Bay Bridge East Span Replacement · 2002–2013 &amp; Seismic Retrofit Program</div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:14px">The Bay Bridge East Span replacement was the longest and most complex of the five-state projects — 10+ years including design, environmental review, political negotiations, and construction. The original eastern span was damaged in the 1989 Loma Prieta earthquake.</p>
+      <ol class="route-steps">
+        <li>Parallel structure construction: New eastern span built adjacent to old span while old span remained open — zero closures during construction; final switch-over achieved in a 5-day closure window in Sept 2013</li>
+        <li>Alternative modes: BART ridership increased by 35–40% during the 5-day closure; AC Transit, San Francisco Ferry expanded service</li>
+        <li>Freight diversion: Richmond-San Rafael Bridge and Carquinez Bridge designated for commercial freight; Caltrans coordinated with Port of Oakland for advance cargo scheduling</li>
+        <li>Economic cost of the 2013 closure: Estimated $73 million in user costs and economic impact over the 5-day closure window; Caltrans pre-positioned crews for round-the-clock operations to minimize duration</li>
+        <li>Seismic retrofit closures (ongoing): Individual bridge column retrofit closures across CA are programmed on 3-year advance planning cycles; each requires 3-month traffic study per Caltrans HDM Chapter 100</li>
+        <li>Public outreach: Multi-language outreach (English, Spanish, Cantonese, Mandarin, Tagalog) given Bay Area demographics; Caltrans District 4 maintained dedicated project website, Twitter feed, and Bay Bridge Info Line</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="callout callout-green" style="margin-top:28px">
+    <strong>Framework for Alternative Route Planning — All States</strong>
+    A best-practice Alternative Route Planning study includes: (1) Traffic impact analysis — AADT redistribution modeling using TransCAD or VISUM; (2) Structural adequacy review of all detour bridges and pavements; (3) Emergency service response time analysis; (4) Freight &amp; evacuation route continuity; (5) Multi-modal assessment (transit, pedestrian, bicycle); (6) Economic impact estimation (user costs, commerce); (7) Environmental Justice review of impacts on low-income/minority communities; (8) ITS &amp; communication strategy (511, VMS, media, social media). Duration for a full study: 4–8 weeks minimum for simple corridors; 6–18 months for complex metro corridors.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 8 — STATE REHABILITATION RANKING
+══════════════════════════════════════════════════════════════ -->
+<section id="ranking">
+  <div class="section-eyebrow">Section 08</div>
+  <h2 class="section-title">Rehabilitation Urgency Ranking</h2>
+  <p class="section-desc">The following composite ranking is based on four weighted criteria: (1) Percentage of bridges in Poor condition (35%), (2) Average Health Index score — inverted (30%), (3) Total number of structurally deficient bridges — absolute count (20%), and (4) Estimated rehabilitation funding backlog per bridge (15%). Higher score = greater urgency.</p>
+
+  <div class="grid-2" style="gap:40px;align-items:start">
+    <div>
+      <!-- PA -->
+      <div class="rank-bar-wrap">
+        <div class="rb-header">
+          <div class="rb-name">#1 — Pennsylvania <span style="font-size:12px;color:var(--text-faint)">Highest Rehabilitation Urgency</span></div>
+          <div class="rb-score" style="color:var(--red)">Score: 82/100</div>
+        </div>
+        <div class="rb-bar"><div class="rb-fill" style="width:82%;background:var(--red)"></div></div>
+        <div class="rb-meta">
+          <span>14.0% Poor</span>
+          <span>HI: 61.2%</span>
+          <span>3,185 SD bridges</span>
+          <span>Backlog: $8.4B estimated</span>
+        </div>
+      </div>
+
+      <!-- NY -->
+      <div class="rank-bar-wrap">
+        <div class="rb-header">
+          <div class="rb-name">#2 — New York</div>
+          <div class="rb-score" style="color:var(--orange)">Score: 68/100</div>
+        </div>
+        <div class="rb-bar"><div class="rb-fill" style="width:68%;background:var(--orange)"></div></div>
+        <div class="rb-meta">
+          <span>16.0% Poor (local bridges inc.)</span>
+          <span>HI: 68.5%</span>
+          <span>1,684 SD state bridges</span>
+          <span>Backlog: $6.2B estimated</span>
+        </div>
+      </div>
+
+      <!-- TX -->
+      <div class="rank-bar-wrap">
+        <div class="rb-header">
+          <div class="rb-name">#3 — Texas</div>
+          <div class="rb-score" style="color:var(--yellow)">Score: 52/100</div>
+        </div>
+        <div class="rb-bar"><div class="rb-fill" style="width:52%;background:var(--yellow)"></div></div>
+        <div class="rb-meta">
+          <span>9.0% Poor</span>
+          <span>HI: 72.4%</span>
+          <span>2,071 SD bridges (largest absolute count)</span>
+          <span>Backlog: $5.8B estimated</span>
+        </div>
+      </div>
+
+      <!-- CA -->
+      <div class="rank-bar-wrap">
+        <div class="rb-header">
+          <div class="rb-name">#4 — California</div>
+          <div class="rb-score" style="color:var(--blue)">Score: 44/100</div>
+        </div>
+        <div class="rb-bar"><div class="rb-fill" style="width:44%;background:var(--blue)"></div></div>
+        <div class="rb-meta">
+          <span>11.0% Poor</span>
+          <span>HI: 74.8%</span>
+          <span>1,921 SD bridges</span>
+          <span>Backlog: $9.1B (seismic adds significant cost)</span>
+        </div>
+      </div>
+
+      <!-- FL -->
+      <div class="rank-bar-wrap">
+        <div class="rb-header">
+          <div class="rb-name">#5 — Florida <span style="font-size:12px;color:var(--text-faint)">Lowest Urgency</span></div>
+          <div class="rb-score" style="color:var(--green)">Score: 28/100</div>
+        </div>
+        <div class="rb-bar"><div class="rb-fill" style="width:28%;background:var(--green)"></div></div>
+        <div class="rb-meta">
+          <span>6.0% Poor</span>
+          <span>HI: 82.3%</span>
+          <span>378 SD bridges</span>
+          <span>Backlog: $1.9B estimated</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="callout callout-red">
+        <strong>Pennsylvania — Critical Assessment</strong>
+        Pennsylvania has the most urgent rehabilitation need of the five states. Over 14% of its 22,762 bridges are rated in Poor condition — the highest percentage nationally among large states. The combination of an aging inventory (median bridge age: 52 years), aggressive freeze-thaw deterioration, and historically underfunded maintenance creates the largest per-bridge backlog. The Fern Hollow Bridge collapse (2022) exemplified the consequence of deferred action. PennDOT has received additional BIF allocations, but the backlog continues to grow faster than available funding at current investment levels.
+      </div>
+      <div class="callout callout-blue" style="margin-top:16px">
+        <strong>California — Hidden Risk Factor</strong>
+        California ranks 4th on the composite urgency score, but its seismic vulnerability introduces a risk profile that pure HI/condition metrics underrepresent. Pre-1989 bridges not yet seismically retrofitted carry catastrophic failure risk disproportionate to their condition ratings. The CA Seismic Retrofit Program has addressed most NHS bridges, but thousands of local agency bridges remain vulnerable, particularly in high-PGA zones of Southern California and the Bay Area.
+      </div>
+      <div class="callout callout-green" style="margin-top:16px">
+        <strong>Florida — Why the Best Performer?</strong>
+        Florida benefits from: (1) Younger average bridge inventory (median age ~32 years), partly due to extensive I-4, I-75, and Turnpike expansion in the 1990s–2000s; (2) Aggressive preventive maintenance program (FDOT's Maintenance Rating Program); (3) No freeze-thaw deterioration; (4) Consistent state funding (~$600M/year for bridge maintenance/replacement). FDOT's pioneer status in ABC and element-level inspection has also enabled cost-effective early interventions.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 9 — DATA NODES / CONNECTIVITY
+══════════════════════════════════════════════════════════════ -->
+<section id="nodes">
+  <div class="section-eyebrow">Section 09</div>
+  <h2 class="section-title">Data Source Nodes</h2>
+  <p class="section-desc">This repository is designed to connect to live data sources. Each node below represents a primary data platform — either currently connected (live data available) or available for integration. Click any node to navigate directly to the source. When adding a new bridge data website, link it as a new node in the grid below by copying the node-card template.</p>
+
+  <div class="callout callout-blue">
+    <strong>How to Add a New Data Node</strong>
+    To link a new data source, copy the node-card HTML block, update the node name, URL, and description, and change the dot class to nd-green (connected), nd-yellow (available), or nd-blue (external research). This structure is designed for GitHub Pages deployment — all links are absolute and work without a backend.
+  </div>
+
+  <div class="node-grid">
+    <div class="node-card connected">
+      <div class="node-dot nd-green"></div>
+      <div class="node-name">FHWA National Bridge Inventory</div>
+      <div class="node-url">https://www.fhwa.dot.gov/bridge/nbi.cfm</div>
+      <div class="node-desc">Primary federal database. Annual NBI dataset with 140+ data items for all 620,000+ U.S. bridges. Downloadable ASCII flat files by state. Updated annually each spring.</div>
+      <a class="node-btn" href="https://www.fhwa.dot.gov/bridge/nbi.cfm" target="_blank">Open Source ↗</a>
+    </div>
+    <div class="node-card connected">
+      <div class="node-dot nd-green"></div>
+      <div class="node-name">FHWA SNBI Bridge Data</div>
+      <div class="node-url">https://www.fhwa.dot.gov/bridge/snbi/</div>
+      <div class="node-desc">SNBI element data, condition state distributions, and Health Index reporting. Includes the SNBI XML schema documentation and state submission guidelines.</div>
+      <a class="node-btn" href="https://www.fhwa.dot.gov/bridge/snbi/" target="_blank">Open Source ↗</a>
+    </div>
+    <div class="node-card connected">
+      <div class="node-dot nd-green"></div>
+      <div class="node-name">FHWA Bridge Formula Program</div>
+      <div class="node-url">https://www.fhwa.dot.gov/bridge/bfp/</div>
+      <div class="node-desc">BIF Bridge Formula Program allocations, state apportionments, eligible activities, and performance measures. $26.5B available 2022–2026.</div>
+      <a class="node-btn" href="https://www.fhwa.dot.gov/bridge/bfp/" target="_blank">Open Source ↗</a>
+    </div>
+    <div class="node-card">
+      <div class="node-dot nd-yellow"></div>
+      <div class="node-name">TxDOT Bridge Inspection Database</div>
+      <div class="node-url">https://www.txdot.gov/inside-txdot/division/bridge.html</div>
+      <div class="node-desc">TxDOT Bridge Division — state bridge inspection reports, load ratings, TxBIS data system, and BridgeAsset module. Texas-specific bridge data portal.</div>
+      <a class="node-btn" href="https://www.txdot.gov/inside-txdot/division/bridge.html" target="_blank">Open Source ↗</a>
+    </div>
+    <div class="node-card">
+      <div class="node-dot nd-yellow"></div>
+      <div class="node-name">Caltrans Bridge Information</div>
+      <div class="node-url">https://dot.ca.gov/programs/structures</div>
+      <div class="node-desc">Caltrans Division of Engineering Services — bridge design, inspection, seismic retrofit program status, BMS2 system, and CA-specific bridge data. Includes Seismic Retrofit Program tracking.</div>
+      <a class="node-btn" href="https://dot.ca.gov/programs/structures" target="_blank">Open Source ↗</a>
+    </div>
+    <div class="node-card">
+      <div class="node-dot nd-yellow"></div>
+      <div class="node-name">PennDOT Bridge Safety &amp; Inspection</div>
+      <div class="node-url">https://www.penndot.pa.gov/ProjectAndPrograms/Bridges</div>
+      <div class="node-desc">PennDOT bridge inspection data, poor bridge list, Bridge Management System (AASHTOWare), and BIF project tracking for Pennsylvania's 22,000+ bridges.</div>
+      <a class="node-btn" href="https://www.penndot.pa.gov/ProjectAndPrograms/Bridges" target="_blank">Open Source ↗</a>
+    </div>
+    <div class="node-card">
+      <div class="node-dot nd-yellow"></div>
+      <div class="node-name">FDOT Structures Office</div>
+      <div class="node-url">https://www.fdot.gov/structures</div>
+      <div class="node-desc">FDOT Structures Office — bridge inspection, load rating, STMAN database, SNBI implementation, and ABC design guidelines. Includes access to Florida Bridge Information System (FBIS).</div>
+      <a class="node-btn" href="https://www.fdot.gov/structures" target="_blank">Open Source ↗</a>
+    </div>
+    <div class="node-card">
+      <div class="node-dot nd-yellow"></div>
+      <div class="node-name">NYSDOT Bridge Programs</div>
+      <div class="node-url">https://www.dot.ny.gov/divisions/engineering/structures/bridges</div>
+      <div class="node-desc">NYSDOT Bridge Programs including Capital Plan, PIN project tracking, BridgeMaster system, NYC DOT municipal bridge data portal, and PANYNJ bridge inspection reports.</div>
+      <a class="node-btn" href="https://www.dot.ny.gov/divisions/engineering/structures/bridges" target="_blank">Open Source ↗</a>
+    </div>
+    <div class="node-card">
+      <div class="node-dot nd-blue"></div>
+      <div class="node-name">ASCE Infrastructure Report Card</div>
+      <div class="node-url">https://infrastructurereportcard.org/cat-item/bridges-infrastructure/</div>
+      <div class="node-desc">ASCE's Bridge infrastructure grading (current grade: C+), state-by-state data, investment needs estimates, and policy recommendations. Updated every 4 years (2025 edition upcoming).</div>
+      <a class="node-btn" href="https://infrastructurereportcard.org/cat-item/bridges-infrastructure/" target="_blank">Open Source ↗</a>
+    </div>
+    <div class="node-card">
+      <div class="node-dot nd-blue"></div>
+      <div class="node-name">NTSB Bridge Accident Database</div>
+      <div class="node-url">https://www.ntsb.gov/investigations/Pages/default.aspx</div>
+      <div class="node-desc">NTSB full investigation reports for all major U.S. bridge failures and accidents. Searchable by structure type, cause, and date. Essential for failure root-cause research.</div>
+      <a class="node-btn" href="https://www.ntsb.gov/investigations/Pages/default.aspx" target="_blank">Open Source ↗</a>
+    </div>
+    <div class="node-card">
+      <div class="node-dot nd-blue"></div>
+      <div class="node-name">AASHTO BridgeWare Suite</div>
+      <div class="node-url">https://aashtoware.org/products/bridge/</div>
+      <div class="node-desc">AASHTOWare Bridge Management (used by PA, FL, and NY) — the primary commercial BMS for SNBI-compliant element inspection data, HI calculation, and project programming. Technical documentation available.</div>
+      <a class="node-btn" href="https://aashtoware.org/products/bridge/" target="_blank">Open Source ↗</a>
+    </div>
+    <div class="node-card" style="border-style:dashed;opacity:.6;cursor:default">
+      <div class="node-dot nd-yellow"></div>
+      <div class="node-name">+ Add Custom Data Source</div>
+      <div class="node-url">your-data-portal-url-here</div>
+      <div class="node-desc">Copy this node-card template and update with your bridge data website URL. Change nd-yellow to nd-green once connected. Add to the grid to link your live data portal to this repository.</div>
+      <span class="node-btn" style="cursor:default;opacity:.5">Awaiting Connection</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 10 — SOURCES
+══════════════════════════════════════════════════════════════ -->
+<section id="sources">
+  <div class="section-eyebrow">Section 10</div>
+  <h2 class="section-title">Verified Sources &amp; References</h2>
+  <p class="section-desc">All data, statistics, and technical standards cited in this repository are sourced from primary government agencies, peer-reviewed literature, and authoritative professional organizations. Sources are listed by category with direct links for verification.</p>
+
+  <h3 style="font-family:var(--font-mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:28px 0 8px">Federal Government &amp; Regulatory</h3>
+
+  <div class="source-item">
+    <div class="source-num">01</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.fhwa.dot.gov/bridge/nbi/no10/defect23.cfm" target="_blank">FHWA — 2023 National Bridge Inventory Annual Report (Bridge Condition by State)</a></div>
+      <div class="source-meta">Federal Highway Administration · Office of Bridges and Structures · Published annually · Data year: 2023</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">02</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.fhwa.dot.gov/bridge/snbi/" target="_blank">FHWA — Streamlined National Bridge Inventory (SNBI) — Official Program Page</a></div>
+      <div class="source-meta">Federal Highway Administration · 23 CFR Part 650 · Final Rule Effective January 2022</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">03</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.fhwa.dot.gov/bridge/inspection/national_bridge_inspection_standards.cfm" target="_blank">FHWA — National Bridge Inspection Standards (NBIS) — 23 CFR Part 650, Subpart C</a></div>
+      <div class="source-meta">Federal Highway Administration · Last Revised: 2004; Updated under SNBI rulemaking 2022</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">04</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.fhwa.dot.gov/bridge/bfp/" target="_blank">FHWA — Bridge Formula Program (BFP) — Bipartisan Infrastructure Law</a></div>
+      <div class="source-meta">Federal Highway Administration · $26.5B program 2022–2026 · BIL Section 11105</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">05</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.ntsb.gov/investigations/AccidentReports/Reports/HAR1803.pdf" target="_blank">NTSB — Highway Accident Report HAR-18/03: FIU Pedestrian Bridge Collapse, Miami, FL (2018)</a></div>
+      <div class="source-meta">National Transportation Safety Board · Report Published October 2019 · Full investigation including cause findings and 11 safety recommendations</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">06</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.ntsb.gov/investigations/Pages/HWY22MH007.aspx" target="_blank">NTSB — Highway Accident Investigation: Fern Hollow Bridge Collapse, Pittsburgh, PA (2022)</a></div>
+      <div class="source-meta">National Transportation Safety Board · Accident ID: HWY22MH007 · Investigation ongoing through 2023; final report published 2024</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">07</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.ntsb.gov/investigations/AccidentReports/Reports/HAR0803.pdf" target="_blank">NTSB — Highway Accident Report HAR-08/03: I-35W Bridge Collapse, Minneapolis, MN (2007)</a></div>
+      <div class="source-meta">National Transportation Safety Board · Report Published November 2008 · Definitive analysis of gusset plate failure mechanism</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:28px 0 8px">State DOT Technical Documents</h3>
+
+  <div class="source-item">
+    <div class="source-num">08</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.txdot.gov/inside-txdot/division/bridge/bridge-inspection.html" target="_blank">TxDOT — Bridge Inspection Program Manual &amp; TxBIS Database</a></div>
+      <div class="source-meta">Texas Department of Transportation · Bridge Division · Updated 2023</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">09</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://dot.ca.gov/programs/structures/seismic-safety" target="_blank">Caltrans — Seismic Safety Retrofit Program — Program Status &amp; Data</a></div>
+      <div class="source-meta">California DOT · Division of Engineering Services · Structures · Updated 2024</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">10</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.penndot.pa.gov/TravelInPA/Bridges/Pages/default.aspx" target="_blank">PennDOT — Pennsylvania Bridge Conditions &amp; Safety Program</a></div>
+      <div class="source-meta">Pennsylvania DOT · Office of Structures · 2023 Bridge Safety Statistics Report</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">11</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.fdot.gov/structures/inspection.shtm" target="_blank">FDOT — Structures Office Bridge Inspection Program &amp; ABC Design Guidelines</a></div>
+      <div class="source-meta">Florida DOT · Structures Design Office · ABC Design Guidelines Version 4.0 (2023)</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">12</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.dot.ny.gov/divisions/engineering/structures/bridges/bridge-statistics" target="_blank">NYSDOT — Bridge Statistics and Capital Plan</a></div>
+      <div class="source-meta">New York State DOT · Structures Division · Annual Bridge Statistics · Updated 2024</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:28px 0 8px">Technical Standards &amp; Manuals</h3>
+
+  <div class="source-item">
+    <div class="source-num">13</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.fhwa.dot.gov/bridge/inspection/policies/hib953.cfm" target="_blank">FHWA — Recording and Coding Guide for the Structure Inventory and Appraisal of the Nation's Bridges (NBI Coding Guide)</a></div>
+      <div class="source-meta">Federal Highway Administration · FHWA-PD-96-001 · 1995 (still primary reference for NBI data items)</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">14</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.fhwa.dot.gov/bridge/inspection/documents/snbi_final_data_dictionary.pdf" target="_blank">FHWA — SNBI Final Data Dictionary (2022)</a></div>
+      <div class="source-meta">Federal Highway Administration · Bridge Preservation &amp; Inspection Office · January 2022</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">15</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://bookstore.transportation.org/item_details.aspx?id=3397" target="_blank">AASHTO — Bridge Element Inspection Manual (2023 Edition)</a></div>
+      <div class="source-meta">American Association of State Highway and Transportation Officials · 3rd Edition · Standard reference for CoRe element inspection, condition states, and HI calculation</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">16</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.fhwa.dot.gov/bridge/inspection/documents/bridge_inspector_reference_manual.pdf" target="_blank">FHWA — Bridge Inspector's Reference Manual (BIRM) — NHI 13049</a></div>
+      <div class="source-meta">Federal Highway Administration · NHI Publication No. 13049 · Primary training reference for all NBIS-qualified bridge inspectors</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-mono);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin:28px 0 8px">Research &amp; Professional Organizations</h3>
+
+  <div class="source-item">
+    <div class="source-num">17</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://infrastructurereportcard.org/cat-item/bridges-infrastructure/" target="_blank">ASCE 2021 Infrastructure Report Card — Bridges (Grade: C+)</a></div>
+      <div class="source-meta">American Society of Civil Engineers · 2021 Report Card · Next edition: 2025</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">18</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.strongtowns.org/journal/2022/2/4/what-happened-to-the-fern-hollow-bridge" target="_blank">Strong Towns — Fern Hollow Bridge: What Happened and What It Means</a></div>
+      <div class="source-meta">Strong Towns · Chuck Marohn · February 2022 · Policy context and deferred maintenance analysis</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">19</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://onlinepubs.trb.org/onlinepubs/nchrp/nchrp_rpt_568.pdf" target="_blank">NCHRP Report 568 — Fracture-Critical Bridge Inspection Guidelines</a></div>
+      <div class="source-meta">Transportation Research Board · National Cooperative Highway Research Program · 2006 · Foundational document for fracture-critical inspection practice in all states</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">20</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.transportation.gov/sites/dot.gov/files/2022-01/BIF-Bridge-Factsheet.pdf" target="_blank">USDOT — Bipartisan Infrastructure Law: Bridge Investment Fact Sheet</a></div>
+      <div class="source-meta">U.S. Department of Transportation · January 2022 · Summary of $110B total infrastructure investment including bridge-specific programs</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">21</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.sciencedirect.com/journal/journal-of-bridge-engineering" target="_blank">ASCE Journal of Bridge Engineering — Peer-Reviewed Research</a></div>
+      <div class="source-meta">American Society of Civil Engineers · Published bi-monthly · Primary peer-reviewed venue for bridge condition assessment, HI methodology, CFRP strengthening, and ABC research</div>
+    </div>
+  </div>
+  <div class="source-item">
+    <div class="source-num">22</div>
+    <div class="source-content">
+      <div class="source-title"><a href="https://www.fhwa.dot.gov/bridge/preservation/docs/hif17007.pdf" target="_blank">FHWA — Bridge Preservation Guide (HIF-17-007) — Maintaining a State of Good Repair</a></div>
+      <div class="source-meta">Federal Highway Administration · FHWA-HIF-17-007 · 2018 · Comprehensive preservation-first framework and cost-benefit analysis methodology</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════════════ -->
+<footer>
+  <div>
+    <span style="color:var(--text-dim)">Bridge Condition Repository</span>
+    <span style="margin:0 12px;color:var(--text-faint)">·</span>
+    <span>TX · CA · PA · FL · NY</span>
+    <span style="margin:0 12px;color:var(--text-faint)">·</span>
+    <span>Data: FHWA NBI 2023 · SNBI 2022</span>
+  </div>
+  <div>
+    <span>Built for GitHub Pages</span>
+    <span style="margin:0 12px;color:var(--text-faint)">·</span>
+    <span>v1.0 · May 2024</span>
+    <span style="margin:0 12px;color:var(--text-faint)">·</span>
+    <span style="color:var(--text-faint)">For transportation engineering reference use</span>
+  </div>
+</footer>
+
+<script>
+// ── Tab switcher ────────────────────────────────────────────────
+function switchTab(e, id){
+  const tabs = e.target.closest('.tabs');
+  const section = tabs.nextElementSibling;
+  const allPanes = section.querySelectorAll('.tab-pane');
+  const allBtns = tabs.querySelectorAll('.tab-btn');
+  allBtns.forEach(b => b.classList.remove('active'));
+  allPanes.forEach(p => p.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+// ── Animate bars on scroll ──────────────────────────────────────
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.pb-fill,.rb-fill').forEach(bar => {
+        const w = bar.style.width;
+        bar.style.width='0';
+        setTimeout(()=>{ bar.style.width=w; }, 100);
+      });
+    }
+  });
+},{threshold:.2});
+document.querySelectorAll('.state-card,.rank-bar-wrap').forEach(el => io.observe(el));
+
+// ── Smooth active nav highlight ─────────────────────────────────
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let current='';
+  sections.forEach(s=>{
+    if(window.scrollY >= s.offsetTop - 80) current = s.id;
+  });
+  navLinks.forEach(a=>{
+    a.style.color = a.getAttribute('href')==='#'+current ? 'var(--accent)' : '';
+  });
+});
+</script>
+</body>
+</html>
